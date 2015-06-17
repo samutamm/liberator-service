@@ -1,0 +1,7 @@
+(use 'liberator-service.repl)
+(start-server)
+(def mappi [] {:a {:d 54 :b {:c 1000}}})
+(def mappi {:a {:d 54 :b {:c 1000}}})
+(get-in mappi :a :b :c)
+(get-in mappi [:a :b :c])
+(get-in mappi [:a :d])
