@@ -7,11 +7,17 @@
                  [hiccup "1.0.5"]
                  [ring-server "0.3.1"]
                  [liberator "0.10.0"]
-                 [cheshire "5.2.0"]]
+                 [cheshire "5.2.0"]
+                 [ring/ring-jetty-adapter "1.2.2"]
+                 [environ "0.5.0"]
+                 [environ/environ.lein "0.2.1"]]
+  :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.8.12"]]
   :ring {:handler liberator-service.handler/app
          :init liberator-service.handler/init
          :destroy liberator-service.handler/destroy}
+  :hooks [environ.leiningen.hooks]
+  :uberjar-name "liberator-service.jar"
   :profiles
   {:uberjar {:aot :all}
    :production

@@ -46,5 +46,3 @@
   (ANY "/" request home)
   (GET "/users" request get-users)
   (POST "/add-user" request add-user))
-
-;;sivu 69
