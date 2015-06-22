@@ -6,7 +6,7 @@
       [cheshire.core :refer [generate-string]]))
 
 (def users (atom ["John" "Jane"]))
-(def index-file (str "/index.html"))
+(def index-file (str "../../../resources/public/index.html"))
 
 (defresource home
     :available-media-types ["text/html"]
