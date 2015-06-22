@@ -1,7 +1,7 @@
-(ns liberator-service.test.handler
+(ns samutamm.test.handler
   (:use clojure.test
         ring.mock.request
-        liberator-service.handler))
+        samutamm.handler))
 
 (deftest test-app
   (testing "main route"

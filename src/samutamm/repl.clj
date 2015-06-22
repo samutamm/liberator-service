@@ -1,5 +1,5 @@
-(ns liberator-service.repl
-  (:use liberator-service.handler
+(ns samutamm.repl
+  (:use samutamm.handler
         ring.server.standalone
         [ring.middleware file-info file]))
 

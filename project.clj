@@ -1,6 +1,6 @@
-(defproject liberator-service "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+(defproject samutamm "0.1.0-SNAPSHOT"
+  :description "WEB app/page for samutamm"
+  :url "http://samutamm.herokuapp.com"
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [lib-noir "0.7.2"]
                  [compojure "1.1.6"]
@@ -13,11 +13,10 @@
                  [environ/environ.lein "0.2.1"]]
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.8.12"]]
-  :ring {:handler liberator-service.handler/app
-         :init liberator-service.handler/init
-         :destroy liberator-service.handler/destroy}
-  :hooks [environ.leiningen.hooks]
-  :uberjar-name "liberator-service.jar"
+  :ring {:handler samutamm.handler/app
+         :init samutamm.handler/init
+         :destroy samutamm.handler/destroy}
+  :uberjar-name "samutamm.jar"
   :profiles
   {:uberjar {:aot :all}
    :production

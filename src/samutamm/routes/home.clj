@@ -1,4 +1,4 @@
-(ns liberator-service.routes.home
+(ns samutamm.routes.home
   (:require [compojure.core :refer :all]
       [liberator.core :refer [defresource resource request-method-in]]
       [noir.io :as io]
