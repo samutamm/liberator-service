@@ -16,10 +16,7 @@
         {::file (file (str (io/resource-path) index-file))}])
     :handle-ok
     (fn [{{{resource :resource} :route-params} :request}]
-      (clojure.java.io/input-stream (io/get-resource index-file)))
-    :last-modified
-    (fn [{{{resource :resource} :route-params} :request}]
-      (.lastModified (file (str (io/resource-path) index-file)))))
+      (clojure.java.io/input-stream (io/get-resource index-file))))
 
 (defresource get-users
   :allowed-methods [:get]
