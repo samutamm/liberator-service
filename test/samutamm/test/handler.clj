@@ -1,14 +1,17 @@
 (ns samutamm.test.handler
-  (:use clojure.test
+  (:use midje.sweet
         ring.mock.request
         samutamm.handler))
 
-(deftest test-app
-  (testing "main route"
-    (let [response (app (request :get "/"))]
-      (is (= (:status response) 200))
-      (is (.contains (:body response) "Hello World"))))
+(defn contains-string [body string]
+  (let [body-string (slurp body)]
+      (.contains body-string string)))
 
-  (testing "not-found route"
-    (let [response (app (request :get "/invalid"))]
-      (is (= (:status response) 404)))))
+(fact "main route"
+  (let [response (app (request :get "/"))]
+    (:status response) => 200
+    (:body response) => (fn [body] (contains-string body "<title>samutamm</title>"))))
+
+(fact "not-found route"
+  (let [response (app (request :get "/invalidpath"))]
+    (:status response) => 404))

@@ -5,3 +5,14 @@
 (get-in mappi :a :b :c)
 (get-in mappi [:a :b :c])
 (get-in mappi [:a :d])
+(:use samutamm.handler)
+(ns samutamm.test.handler
+  (:use midje.sweet
+        ring.mock.request
+        samutamm.handler))
+(app)
+(app (:request :get "/"))
+(app (request :get "/"))
+(:body (app (request :get "/")))
+(to_s (:body (app (request :get "/"))))
+(slurp (:body (app (request :get "/"))))

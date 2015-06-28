@@ -12,7 +12,9 @@
                  [environ "0.5.0"]
                  [environ/environ.lein "0.2.1"]]
   :min-lein-version "2.0.0"
-  :plugins [[lein-ring "0.8.12"]]
+  :plugins [[lein-ring "0.8.12"]
+            [lein-cloverage "1.0.6"]
+            [lein-midje "3.1.3"]]
   :ring {:handler samutamm.handler/app
          :init samutamm.handler/init
          :destroy samutamm.handler/destroy}
@@ -23,4 +25,6 @@
    {:ring
     {:open-browser? false, :stacktraces? false, :auto-reload? false}}
    :dev
-   {:dependencies [[ring-mock "0.1.5"] [ring/ring-devel "1.3.1"]]}})
+   {:dependencies [[ring-mock "0.1.5"]
+                   [ring/ring-devel "1.3.1"]
+                   [midje "1.6.3"]]}})
