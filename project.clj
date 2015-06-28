@@ -10,7 +10,9 @@
                  [cheshire "5.2.0"]
                  [ring/ring-jetty-adapter "1.2.2"]
                  [environ "0.5.0"]
-                 [environ/environ.lein "0.2.1"]]
+                 [environ/environ.lein "0.2.1"]
+                 [org.clojure/java.jdbc "0.2.3"]
+                 [postgresql/postgresql "9.1-901.jdbc4"]]
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.8.12"]
             [lein-cloverage "1.0.6"]
