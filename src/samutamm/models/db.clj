@@ -3,12 +3,6 @@
 
 (def is-dev-db (atom true))
 
-(def db-config (or (System/getenv "DATABASE_URL")
-        {:subprotocol "postgresql"
-         :subname "//localhost/projects"
-         :user "admin"
-         :password "admin"}))
-
 (defn make-sql-date
   [year month day]
   (java.sql.Date.

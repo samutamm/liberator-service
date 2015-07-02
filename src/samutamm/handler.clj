@@ -6,7 +6,8 @@
             [hiccup.middleware :refer [wrap-base-url]]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [samutamm.routes.home :refer [home-routes]]))
+            [samutamm.routes.home :refer [home-routes]]
+            [samutamm.routes.projects :refer [project-routes]]))
 
 (defn init []
   (println "samutamm is starting"))
@@ -19,6 +20,6 @@
   (route/not-found "Not Found"))
 
 (def app
-  (-> (routes home-routes app-routes)
+  (-> (routes home-routes project-routes app-routes)
       (handler/site)
       (wrap-base-url)))
