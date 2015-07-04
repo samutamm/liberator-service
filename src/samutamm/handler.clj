@@ -7,10 +7,12 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [samutamm.routes.home :refer [home-routes]]
-            [samutamm.routes.projects :refer [project-routes]]))
+            [samutamm.routes.projects :refer [project-routes]]
+            [samutamm.models.db :as database]))
 
 (defn init []
-  (println "samutamm is starting"))
+  (if (not database/projecst-table-is-created?)
+    (database/create-projects-table)))
 
 (defn destroy []
   (println "samutamm is shutting down"))

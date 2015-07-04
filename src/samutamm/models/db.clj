@@ -15,7 +15,7 @@
    (.getTimeInMillis
     (java.util.GregorianCalendar. year month day))))
 
-(defn create-projects-table [db]
+(defn create-projects-table []
   (sql/with-connection db
     (sql/create-table
     :projects
@@ -56,4 +56,9 @@
   (sql/with-connection db
     (sql/delete-rows :projects ["id=?" id])))
 
-(defn testi [] (str "Moikka"))
+(defn projecst-table-is-created? []
+  (sql/with-connection db
+    (sql/with-query-results res
+      [(str "select count(*) from information_schema.tables "
+                       "where table_name='projects'")]
+      (pos? (:count (first res))))))
