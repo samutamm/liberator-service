@@ -11,8 +11,9 @@
             [samutamm.models.db :as database]))
 
 (defn init []
-  (if (not database/projecst-table-is-created?)
-    (database/create-projects-table)))
+  (do (println "inilializing")
+    (if (not database/projecst-table-is-created?)
+      (database/create-projects-table))))
 
 (defn destroy []
   (println "samutamm is shutting down"))
