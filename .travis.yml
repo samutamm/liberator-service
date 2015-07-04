@@ -1,5 +1,5 @@
 language: clojure
-install: lein install; lein ring server
+install: lein install
 before_script:
   - psql -c 'create database testprojects;' -U postgres
 script: lein with-profile travis-test midje
