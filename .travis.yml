@@ -1,8 +1,8 @@
 language: clojure
 install: lein install
 before_script:
-  - psql -c 'create database testprojects;' -U postgres
-script: lein midje
+  - psql -c 'create database projects;' -U postgres
+script: lein with-profile production midje
 jdk:
   - openjdk6
   - openjdk7

@@ -1,7 +1,13 @@
 (ns samutamm.models.db
-  (:require [clojure.java.jdbc :as sql]))
+  (:require [clojure.java.jdbc :as sql]
+            [environ.core :refer [env]]))
 
 (def is-dev-db (atom true))
+
+(def db {:subprotocol "postgresql"
+         :subname (env :db-url)
+         :user (env :db-user)
+         :password (env :db-pass)})
 
 (defn make-sql-date
   [year month day]
@@ -21,18 +27,18 @@
     [:projectend "date"]
     [:created "timestamp"])))
 
-(defn get-project [id db]
+(defn get-project [id]
   (sql/with-connection db
     (sql/with-query-results
       res ["select * from projects where id = ?" id] (first res))))
 
-(defn get-all-projects [db]
+(defn get-all-projects []
   (sql/with-connection db
     (sql/with-query-results res
       ["select * from projects ORDER BY created DESC"]
       (doall res))))
 
-(defn update-or-create-project [db id projectname description tags projectstart projectend]
+(defn update-or-create-project [id projectname description tags projectstart projectend]
   (let [timestamp (java.sql.Timestamp. (.getTime (java.util.Date.)))]
     (sql/with-connection db
       (sql/update-or-insert-values
@@ -46,7 +52,7 @@
        :projectend projectend
        :created timestamp}))))
 
-(defn delete-project [db id]
+(defn delete-project [id]
   (sql/with-connection db
     (sql/delete-rows :projects ["id=?" id])))
 

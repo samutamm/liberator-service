@@ -16,7 +16,8 @@
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.8.12"]
             [lein-cloverage "1.0.6"]
-            [lein-midje "3.1.3"]]
+            [lein-midje "3.1.3"]
+            [lein-environ "0.5.0"]]
   :ring {:handler samutamm.handler/app
          :init samutamm.handler/init
          :destroy samutamm.handler/destroy}
@@ -24,9 +25,26 @@
   :profiles
   {:uberjar {:aot :all}
    :production
-   {:ring
-    {:open-browser? false, :stacktraces? false, :auto-reload? false}}
+   {:ring {:open-browser? false,
+           :stacktraces? false,
+           :auto-reload? false}
+    :env {:port 3000
+          :db-url "//localhost/projects"
+          :db-user "postgres"
+          :db-pass ""}}
    :dev
    {:dependencies [[ring-mock "0.1.5"]
-                   [ring/ring-devel "1.3.1"]
-                   [midje "1.6.3"]]}})
+                   [ring/ring-devel "1.2.0"]
+                   [midje "1.6.3"]]
+    :env {:port 3000
+          :db-url "//localhost/projects"
+          :db-user "admin"
+          :db-pass "admin"}}
+   :test
+   {:dependencies [[ring-mock "0.1.5"]
+                   [ring/ring-devel "1.2.0"]
+                   [midje "1.6.3"]]
+    :env {:port 3000
+          :db-url "//localhost/testprojects"
+          :db-user "admin"
+          :db-pass "admin"}}})

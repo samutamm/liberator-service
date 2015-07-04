@@ -6,19 +6,11 @@
       [cheshire.core :refer [generate-string]]
       [samutamm.models.db :as database]))
 
-
-(def db-config (or (System/getenv "DATABASE_URL")
-        {:subprotocol "postgresql"
-         :subname "//localhost/projects"
-         :user "admin"
-         :password "admin"}))
-
-;; alla esimerkkejä
 (def users (atom ["John" "Jane"]))
 
 (defresource get-projects
   :allowed-methods [:get]
-  :handle-ok (fn [_] (generate-string (database/get-all-projects db-config)))
+  :handle-ok (fn [_] (generate-string (database/get-all-projects)))
   :available-media-types ["application/json"])
 
 (defresource delete-project [id]
