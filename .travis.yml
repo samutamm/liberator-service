@@ -1,0 +1,12 @@
+language: clojure
+install: lein install
+script: lein midje
+jdk:
+  - openjdk6
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+matrix:
+  allow_failures:
+    - oraclejdk7
+    - oraclejdk8
