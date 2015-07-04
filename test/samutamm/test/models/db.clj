@@ -4,21 +4,15 @@
 
 ;;TODO refactor test code to look more pretty
 
-(def dev-db   {:subprotocol "postgresql"
-                 :subname "//localhost/projects"
-                 :user "admin"
-                 :password "admin"})
-
-(def test-db   {:subprotocol "postgresql"
+(def test-db   (or (System/getenv "TEST_DATABASE_URL")
+                {:subprotocol "postgresql"
                  :subname "//localhost/testprojects"
                  :user "admin"
-                 :password "admin"})
+                 :password "admin"}))
 
 (with-state-changes [(before :facts (do (delete-project test-db "1")(delete-project test-db "2")))]
   (fact "test db is empty"
         (count (get-all-projects test-db)) => 0)
-  (fact "dev db is not empty"
-        (count (get-all-projects dev-db)) => (fn [c] (not (zero? c))))
 
   (fact "can add project"
         (do (update-or-create-project test-db
