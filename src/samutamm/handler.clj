@@ -12,8 +12,7 @@
 
 (defn init []
   (do (println "inilializing")
-    (if (not database/projecst-table-is-created?)
-      (database/create-projects-table))))
+    (database/migrate-db)))
 
 (defn destroy []
   (println "samutamm is shutting down"))

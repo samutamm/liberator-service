@@ -7,6 +7,7 @@
     (let [body-string (slurp body)]
       (.contains body-string string)))
 
+(with-state-changes [(before :facts (init))]
   (fact "main route"
         (let [response (app (request :get "/"))]
           (:status response) => 200
@@ -25,4 +26,4 @@
               fields ["id" "projectname" "description" "tags" "projectstart" "projectend" "created"]]
           (:body response) => (fn[body] (every? true?
                                                 (map  (fn [field]
-                                                        (.contains body field)) fields)))))
+                                                        (.contains body field)) fields))))))

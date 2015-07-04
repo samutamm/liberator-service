@@ -56,9 +56,13 @@
   (sql/with-connection db
     (sql/delete-rows :projects ["id=?" id])))
 
-(defn projecst-table-is-created? []
+(defn projects-table-is-created? []
   (sql/with-connection db
     (sql/with-query-results res
       [(str "select count(*) from information_schema.tables "
                        "where table_name='projects'")]
       (pos? (:count (first res))))))
+
+(defn migrate-db []
+  (if (not projects-table-is-created?)
+      (create-projects-table)))

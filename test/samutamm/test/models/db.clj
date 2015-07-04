@@ -7,7 +7,7 @@
 
 (with-state-changes [(before :facts (do (delete-project  "1")(delete-project  "2")))]
   (fact "database is created"
-        (projecst-table-is-created?) => true)
+        (projects-table-is-created?) => true)
   (fact "test db is empty"
         (count (get-all-projects )) => 0)
 
