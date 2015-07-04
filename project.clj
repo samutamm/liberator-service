@@ -55,4 +55,4 @@
     :env {:port 3000
           :db-url "//localhost/testprojects"
           :db-user "postgres"
-          :db-pass ""}}})
+          :db-pass "postgres"}}})
