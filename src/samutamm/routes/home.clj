@@ -6,8 +6,13 @@
       [cheshire.core :refer [generate-string]]
       [environ.core :refer [env]]))
 
-(def index-file (let [path  (str (or (System/getenv "TRAVIS_BUILD_DIR") "/home/samutamm/WEB/Clojure/samutamm")
-                           "/resources/public/index.html")]
+(defn base-dir []
+  "Uggly hard coded hack that trusts that path does not change."
+  (subs (System/getProperty "user.dir") 0 35))
+
+(def index-file (let [path  (str (or (System/getenv "TRAVIS_BUILD_DIR")
+                                     (base-dir))
+                                 "/resources/public/index.html")]
                   (do (println path) path)))
 
 (defresource home
