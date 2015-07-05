@@ -4,10 +4,20 @@
 
 (def is-dev-db (atom true))
 
-(def db {:subprotocol "postgresql"
-         :subname (env :db-url)
-         :user (env :db-user)
-         :password (env :db-pass)})
+(def db-with-password  {:subprotocol "postgresql"
+                        :subname (env :db-url)
+                        :user (env :db-user)
+                        :password (env :db-pass)})
+
+(def db-without-password  {:subprotocol "postgresql"
+                           :subname (env :db-url)
+                           :user (env :db-user)})
+
+(defn check-env [symboli] (env symboli))
+
+(def db (if (nil? (env :db-pass))
+          db-without-password
+          db-with-password))
 
 (defn make-sql-date
   [year month day]
@@ -16,16 +26,17 @@
     (java.util.GregorianCalendar. year month day))))
 
 (defn create-projects-table []
-  (sql/with-connection db
-    (sql/create-table
-    :projects
-    [:id "varchar(32) PRIMARY KEY"]
-    [:projectname "varchar(100)"]
-    [:description "varchar(1000)"]
-    [:tags "varchar(200)"]
-    [:projectstart "date"]
-    [:projectend "date"]
-    [:created "timestamp"])))
+  (do (println (str "start creating projects table with db " db))
+    (sql/with-connection db
+      (sql/create-table
+       :projects
+       [:id "varchar(32) PRIMARY KEY"]
+       [:projectname "varchar(100)"]
+       [:description "varchar(1000)"]
+       [:tags "varchar(200)"]
+       [:projectstart "date"]
+       [:projectend "date"]
+       [:created "timestamp"]))))
 
 (defn get-project [id]
   (sql/with-connection db
@@ -64,5 +75,5 @@
       (pos? (:count (first res))))))
 
 (defn migrate-db []
-  (if (not projects-table-is-created?)
-      (create-projects-table)))
+  (if (not (projects-table-is-created?))
+    (create-projects-table)))

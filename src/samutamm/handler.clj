@@ -8,10 +8,13 @@
             [compojure.route :as route]
             [samutamm.routes.home :refer [home-routes]]
             [samutamm.routes.projects :refer [project-routes]]
-            [samutamm.models.db :as database]))
+            [samutamm.models.db :as database]
+            [environ.core :refer [env]]))
 
 (defn init []
-  (do (println "inilializing")
+  (do
+    (println "inilializing")
+    (println (str "database-url: " (env :db-url)))
     (database/migrate-db)
     (println (str "db-table is created: " (database/projects-table-is-created?)))))
 

@@ -54,5 +54,4 @@
                    [midje "1.6.3"]]
     :env {:port 3000
           :db-url "//localhost/testprojects"
-          :db-user "postgres"
-          :db-pass "postgres"}}})
+          :db-user "postgres"}}})
