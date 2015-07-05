@@ -1,14 +1,21 @@
 language: clojure
 install: lein install
 before_script:
-  - psql -c 'create database testprojects;' -U postgres
+- psql -c 'create database testprojects;' -U postgres
 script: lein with-profile travis-test midje
 jdk:
-  - openjdk6
-  - openjdk7
-  - oraclejdk7
-  - oraclejdk8
+- openjdk6
+- openjdk7
+- oraclejdk7
+- oraclejdk8
 matrix:
   allow_failures:
-    - oraclejdk7
-    - oraclejdk8
+  - oraclejdk7
+  - oraclejdk8
+deploy:
+  provider: heroku
+  api_key:
+    secure: I4e03YXar+427o/SyLGqjI548lv8TwFeXb2N7siWLuW8R7YySfdcTQZMQmXyKSI2ct/TW3Yjh0pxI9ZfsdCy0GrHufMEMI6ZR1tP+E3AtcUXrwYd6JvDDwSkcJ9e0OwIDE0V9dCaTOvismQrUifj92ZnIcNfL9sz5CSR6z6wzVjLxx5NL83SIKUX2mHFnONPvpqDuAXTLBphx7vHmwU5KXfKEkMlCqJ9RWGtTK2WhKoo53ipJwuduzRTZtvBUtK8iUbgWmqE9uzhZ17A1nAN6Hd72B4/lJzFmHpuEgTKq13Btmt385/dM/ffkw/jXnQHwi/WEsyrVNMO/rsT8KQPjSNcMKZYmlogxxQZpRoCFEeYa/4lOzq9/CfBQXuswqU7cxRp7PkQoCN14nBlYL3xwUze4lBY+TI1Y5xgBq8EKX9+U8we7en2mjt+je0cT+ZHeueV0dV+Oo2fY2VD7n/ijihwZRi9HUJToK73LjCEwwc37HvbllyNsKySsZRvLqKh69tAdukn+Sp9cowriWFDHzbwsiLG28ShFVrNnQ95JZ+Y0qoF52iOkA22NAm0iNECYHfA51c8O/CY4ktLxlU0R6EP/r9NgsMofrA0CNyYV2OkMz3SCHqothjY+SWH5Tpn4Dx67pkxl5O4f6+mqwNI/1kNjygKKLAEkdhdOUWrTR4=
+  app: samutamm
+  on:
+    repo: samutamm/samutamm
