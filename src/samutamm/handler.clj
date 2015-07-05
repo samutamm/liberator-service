@@ -11,12 +11,7 @@
             [samutamm.models.db :as database]
             [environ.core :refer [env]]))
 
-(defn init []
-  (do
-    (println "inilializing")
-    (println (str "database-url: " (env :db-url)))
-    (database/migrate-db)
-    (println (str "db-table is created: " (database/projects-table-is-created?)))))
+(defn init [] (database/migrate-db))
 
 (defn destroy []
   (println "samutamm is shutting down"))

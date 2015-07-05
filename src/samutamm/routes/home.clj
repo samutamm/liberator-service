@@ -3,9 +3,12 @@
       [liberator.core :refer [defresource resource request-method-in]]
       [noir.io :as io]
       [clojure.java.io :refer [file]]
-      [cheshire.core :refer [generate-string]]))
+      [cheshire.core :refer [generate-string]]
+      [environ.core :refer [env]]))
 
-(def index-file (str "../../../resources/public/index.html"))
+(def index-file (let [path  (str (or (System/getenv "TRAVIS_BUILD_DIR") "../../..")
+                           "/resources/public/index.html")]
+                  (do (println path) path)))
 
 (defresource home
     :available-media-types ["text/html"]
