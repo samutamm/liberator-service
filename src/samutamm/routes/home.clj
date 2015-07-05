@@ -6,7 +6,7 @@
       [cheshire.core :refer [generate-string]]
       [environ.core :refer [env]]))
 
-(def index-file (let [path  (str (or (System/getenv "TRAVIS_BUILD_DIR") "../../..")
+(def index-file (let [path  (str (or (System/getenv "TRAVIS_BUILD_DIR") "/home/samutamm/WEB/Clojure/samutamm")
                            "/resources/public/index.html")]
                   (do (println path) path)))
 
@@ -14,11 +14,10 @@
     :available-media-types ["text/html"]
     :exists?
     (fn [context]
-      [(io/get-resource index-file)
-        {::file (file (str (io/resource-path) index-file))}])
+      [{::file (file index-file)}])
     :handle-ok
     (fn [{{{resource :resource} :route-params} :request}]
-      (clojure.java.io/input-stream (io/get-resource index-file))))
+      (clojure.java.io/input-stream index-file)))
 
 (defroutes home-routes
   (ANY "/" request home))
