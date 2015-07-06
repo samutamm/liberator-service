@@ -12,14 +12,12 @@
                            :subname (env :db-url)
                            :user (env :db-user)})
 
-(defn heroku-jdbc [] (heroku/jdbc-connection-string (System/getenv "DATABASE_URL")))
-
 (defn check-env [symboli] (env symboli))
 
 (def db (let [db-info (cond (nil? (env :db-pass))
             db-without-password
           (not (nil? (System/getenv "DATABASE_URL")))
-               (heroku-jdbc)
+               (System/getenv "DATABASE_URL")
           :else
             db-with-password)]
           (do (println (str "DB INFO: " db-info))
