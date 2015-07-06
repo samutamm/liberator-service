@@ -1,24 +1,28 @@
 (ns samutamm.models.db
   (:require [clojure.java.jdbc :as sql]
-            [environ.core :refer [env]]))
-
-(def is-dev-db (atom true))
+            [environ.core :refer [env]]
+            [heroku-database-url-to-jdbc.core :as heroku]))
 
 (def db-with-password  {:subprotocol "postgresql"
-                        :subname (or (System/getenv "DATABASE_URL") (env :db-url))
+                        :subname (env :db-url)
                         :user (env :db-user)
                         :password (env :db-pass)})
 
 (def db-without-password  {:subprotocol "postgresql"
-                           :subname (or (System/getenv "DATABASE_URL") (env :db-url))
+                           :subname (env :db-url)
                            :user (env :db-user)})
+
+(defn heroku-jdbc [] (heroku/jdbc-connection-string (System/getenv "DATABASE_URL")))
 
 (defn check-env [symboli] (env symboli))
 
 (def db (do (println db-without-password)
-         (if (nil? (env :db-pass))
-          db-without-password
-          db-with-password)))
+         (cond (nil? (env :db-pass))
+            db-without-password
+          (not (nil? (System/getenv "DATABASE_URL")))
+               (heroku-jdbc)
+          :else
+            db-with-password)))
 
 (defn make-sql-date
   [year month day]
