@@ -15,9 +15,10 @@
 
 (defn check-env [symboli] (env symboli))
 
-(def db (if (nil? (env :db-pass))
+(def db (do (println db-without-password)
+         (if (nil? (env :db-pass))
           db-without-password
-          db-with-password))
+          db-with-password)))
 
 (defn make-sql-date
   [year month day]
