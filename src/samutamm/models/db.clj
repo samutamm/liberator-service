@@ -12,7 +12,7 @@
                            :subname (env :db-url)
                            :user (env :db-user)})
 
-(defn heroku-jdbc [] (heroku/korma-connection-map (System/getenv "DATABASE_URL")))
+(defn heroku-jdbc [] (heroku/jdbc-connection-string (System/getenv "DATABASE_URL")))
 
 (defn check-env [symboli] (env symboli))
 
@@ -22,7 +22,7 @@
                (heroku-jdbc)
           :else
             db-with-password)]
-          (do (println db-info)
+          (do (println (str "DB INFO: " db-info))
             db-info)))
 
 (defn make-sql-date
