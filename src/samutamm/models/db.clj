@@ -12,17 +12,18 @@
                            :subname (env :db-url)
                            :user (env :db-user)})
 
-(defn heroku-jdbc [] (heroku/jdbc-connection-string (System/getenv "DATABASE_URL")))
+(defn heroku-jdbc [] (heroku/korma-connection-map (System/getenv "DATABASE_URL")))
 
 (defn check-env [symboli] (env symboli))
 
-(def db (do (println db-without-password)
-         (cond (nil? (env :db-pass))
+(def db (let [db-info (cond (nil? (env :db-pass))
             db-without-password
           (not (nil? (System/getenv "DATABASE_URL")))
                (heroku-jdbc)
           :else
-            db-with-password)))
+            db-with-password)]
+          (do (println db-info)
+            db-info)))
 
 (defn make-sql-date
   [year month day]
