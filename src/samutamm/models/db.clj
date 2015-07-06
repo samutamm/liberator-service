@@ -5,12 +5,12 @@
 (def is-dev-db (atom true))
 
 (def db-with-password  {:subprotocol "postgresql"
-                        :subname (env :db-url)
+                        :subname (or (System/getenv "DATABASE_URL") (env :db-url))
                         :user (env :db-user)
                         :password (env :db-pass)})
 
 (def db-without-password  {:subprotocol "postgresql"
-                           :subname (env :db-url)
+                           :subname (or (System/getenv "DATABASE_URL") (env :db-url))
                            :user (env :db-user)})
 
 (defn check-env [symboli] (env symboli))
