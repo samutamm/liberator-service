@@ -32,7 +32,7 @@
     :env {:port 3000
           :db-url "//localhost/projects"
           :db-user "postgres"
-          :db-pass ""}}
+          :db-pass "postgres"}}
    :dev
    {:dependencies [[ring-mock "0.1.5"]
                    [ring/ring-devel "1.2.0"]
