@@ -14,16 +14,14 @@
 
 (defn check-env [symboli] (env symboli))
 
-(def db (let [db-info (cond (not (nil? (System/getenv "DATABASE_URL")))
-                            (do (println "heroku")
-                              (System/getenv "DATABASE_URL"))
-                            (nil? (env :db-pass))
-                            (do (println "TRAVIS")
-                              db-without-password)
-                            :else
-                            db-with-password)]
-          (do (println (str "DB INFO: " db-info))
-            db-info)))
+(def db
+  (let [db-info (cond (not (nil? (System/getenv "DATABASE_URL")))
+                      (System/getenv "DATABASE_URL")
+                      (nil? (env :db-pass))
+                      db-without-password
+                      :else
+                      db-with-password)]
+    db-info))
 
 (defn make-sql-date
   [year month day]
