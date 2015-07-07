@@ -6,17 +6,36 @@
       [cheshire.core :refer [generate-string]]
       [samutamm.models.db :as database]))
 
+
 (def users (atom ["John" "Jane"]))
 
-(defresource get-projects
-  :allowed-methods [:get]
-  :handle-ok (fn [_] (generate-string (database/get-all-projects)))
-  :available-media-types ["application/json"])
+(defroutes project-routes
+  (GET "/projects" []
+       (resource
+        :allowed-methods [:get]
+        :handle-ok (fn [_] (generate-string (database/get-all-projects)))
+        :available-media-types ["application/json"]))
 
-(defresource delete-project [id]
-  :allowed-methods [:delete]
-  :handle-ok  "poisto"
-  :available-media-types ["application/json"])
+  (POST "/projects" []
+        (resource
+         :allowed-methods [:post]
+         :available-media-types ["application/json"]
+         :post! (println "postia")
+         :handle-created  (fn [_] (generate-string (str "created new project")))))
+
+  (DELETE "/projects/:id" [id]
+        (resource
+         :allowed-methods [:delete]
+         :available-media-types ["application/json"]
+         :delete! (println (str "poistetaan id" id))
+         :handle-no-content  (fn [_] (generate-string (str "deleted project")))))
+
+  (PUT "/projects/:id" [id]
+        (resource
+         :allowed-methods [:put]
+         :available-media-types ["application/json"]
+         :åut! (println (str "muokataan " id))
+         :handle-created  (fn [_] (generate-string (str "created new project"))))))
 
 (defn check-for-empty
   [context]
@@ -34,6 +53,3 @@
   :handle-created (fn [_] (generate-string @users))
   :available-media-types ["application/json"])
 
-(defroutes project-routes
-  (GET "/projects" request get-projects)
-  (DELETE "/projects/:id" [id] (delete-project id)))
