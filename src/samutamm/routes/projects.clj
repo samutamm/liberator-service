@@ -4,7 +4,8 @@
       [noir.io :as io]
       [clojure.java.io :refer [file]]
       [cheshire.core :refer [generate-string]]
-      [samutamm.models.db :as database]))
+      [samutamm.models.db :as database]
+      [clojure.data.json :as json]))
 
 
 (def users (atom ["John" "Jane"]))
@@ -17,7 +18,10 @@
 (defresource add-new-project
          :allowed-methods [:post]
          :available-media-types ["application/json"]
-         :post! (fn [context] (println (get-in context [:request :body])))
+         :post! (fn [context] (println (:description
+                                        (json/read-str
+                                          (slurp (get-in context [:request :body]))
+                                         :key-fn keyword))))
          :handle-created  (fn [_] (generate-string (str "created new project"))))
 
 (defresource delete-project [id]

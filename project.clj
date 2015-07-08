@@ -13,7 +13,8 @@
                  [environ/environ.lein "0.2.1"]
                  [org.clojure/java.jdbc "0.2.3"]
                  [postgresql/postgresql "9.1-901.jdbc4"]
-                 [heroku-database-url-to-jdbc "0.2.2"]]
+                 [heroku-database-url-to-jdbc "0.2.2"]
+                 [org.clojure/data.json "0.2.6"]]
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.8.12"]
             [lein-cloverage "1.0.6"]

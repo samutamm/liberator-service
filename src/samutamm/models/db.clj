@@ -29,7 +29,7 @@
     (sql/with-connection db
       (sql/create-table
        :projects
-       [:id "varchar(32) PRIMARY KEY"]
+       [:id "SERIAL PRIMARY KEY"]
        [:projectname "varchar(100)"]
        [:description "varchar(1000)"]
        [:tags "varchar(200)"]
