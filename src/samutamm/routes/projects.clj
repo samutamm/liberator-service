@@ -9,47 +9,32 @@
 
 (def users (atom ["John" "Jane"]))
 
-(defroutes project-routes
-  (GET "/projects" []
-       (resource
+(defresource get-all-projects
         :allowed-methods [:get]
         :handle-ok (fn [_] (generate-string (database/get-all-projects)))
-        :available-media-types ["application/json"]))
+        :available-media-types ["application/json"])
 
-  (POST "/projects" []
-        (resource
+(defresource add-new-project
          :allowed-methods [:post]
          :available-media-types ["application/json"]
-         :post! (println "postia")
-         :handle-created  (fn [_] (generate-string (str "created new project")))))
+         :post! (fn [context] (println (get-in context [:request :body])))
+         :handle-created  (fn [_] (generate-string (str "created new project"))))
 
-  (DELETE "/projects/:id" [id]
-        (resource
+(defresource delete-project [id]
          :allowed-methods [:delete]
          :available-media-types ["application/json"]
          :delete! (println (str "poistetaan id" id))
-         :handle-no-content  (fn [_] (generate-string (str "deleted project")))))
+         :handle-no-content  (fn [_] (generate-string (str "deleted project"))))
 
-  (PUT "/projects/:id" [id]
-        (resource
+(defresource update-project [id]
          :allowed-methods [:put]
          :available-media-types ["application/json"]
-         :åut! (println (str "muokataan " id))
-         :handle-created  (fn [_] (generate-string (str "created new project"))))))
+         :put! (println (str "muokataan " id))
+         :handle-ok  (fn [_] (generate-string (str "updated project"))))
 
-(defn check-for-empty
-  [context]
-  (let [params (get-in context [:request :form-params])]
-    (empty? (get params "user"))))
-
-(defresource add-user
-  :method-allowed? (request-method-in :post)
-  :malformed? (fn [context] (check-for-empty context))
-  :handle-malformed "user name cannot be empty!"
-  :post!
-  (fn [context]
-    (let [params (get-in context [:request :form-params])]
-      (swap! users conj (get params "user"))))
-  :handle-created (fn [_] (generate-string @users))
-  :available-media-types ["application/json"])
+(defroutes project-routes
+  (GET "/projects" request get-all-projects)
+  (POST "/projects" request add-new-project)
+  (DELETE "/projects/:id" [id] (delete-project id))
+  (PUT "/projects/:id" [id] (update-project id)))
 

@@ -2,7 +2,10 @@
   (:use midje.sweet
         samutamm.models.db))
 
-;;TODO refactor test code to look more pretty
+(defn make-sql-date [year month day]
+  (java.sql.Date.
+   (.getTimeInMillis
+    (java.util.GregorianCalendar. year month day))))
 
 
 (with-state-changes [(before :facts (do (delete-project  "1")(delete-project  "2")))]

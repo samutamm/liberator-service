@@ -23,11 +23,6 @@
                       db-with-password)]
     db-info))
 
-(defn make-sql-date
-  [year month day]
-  (java.sql.Date.
-   (.getTimeInMillis
-    (java.util.GregorianCalendar. year month day))))
 
 (defn create-projects-table []
   (do (println (str "start creating projects table with db " db))
