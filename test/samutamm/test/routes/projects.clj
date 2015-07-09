@@ -9,6 +9,3 @@
       (project-is-valid testproject) => true
       (project-is-valid (dissoc testproject :tags)) => false
       (project-is-valid (assoc testproject :projectend nil)) => false)
-
-(fact "project parsing"
-      )
