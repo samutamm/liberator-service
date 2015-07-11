@@ -16,11 +16,14 @@
 (defn add-project-to-database
   [context] (let [project (parse-project context)
                                     id (+ 1 (count (database/get-all-projects)))]
-                                (database/update-or-create-project id (:projectname project)
+                                (do
+                                  (println (str "tänne päästiin" project))
+                                  (database/update-or-create-project id
+                                                                   (:projectname project)
                                                                    (:description project)
                                                                    (:tags project)
                                                                    (:projectstart project)
-                                                                   (:projectend project))))
+                                                                   (:projectend project)))))
 
 (defn project-is-valid [project]
   (let [fields [:projectname :description :tags :projectstart :projectend]]
@@ -32,17 +35,11 @@
         :available-media-types ["application/json"])
 
 (defresource add-new-project
-         :allowed-methods [:post]
-         :available-media-types ["application/json"]
-         :post! (fn [context] (println (:description
-                                        (json/read-str
-                                          (slurp (get-in context [:request :body]))
-                                         :key-fn keyword))))
          :malformed? (fn[ctx] (not (project-is-valid (parse-project ctx))))
          :handle-malformed (fn [_] (generate-string (str "Malformed json!")))
          :allowed-methods [:post]
          :available-media-types ["application/json"]
-         :post! (fn [ctx] "poh")
+         :post! (fn [ctx] (println (str "body: " (slurp (get-in ctx [:request :body])))))
          :handle-created  (fn [_] (generate-string (str "created new project"))))
 
 (defresource delete-project [id]
