@@ -9,7 +9,8 @@
             [samutamm.routes.home :refer [home-routes]]
             [samutamm.routes.projects :refer [project-routes]]
             [samutamm.models.db :as database]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [liberator.dev :refer [wrap-trace]]))
 
 (defn init [] (database/migrate-db))
 
@@ -23,4 +24,5 @@
 (def app
   (-> (routes home-routes project-routes app-routes)
       (handler/site)
-      (wrap-base-url)))
+      (wrap-base-url)
+      (wrap-trace :header)))

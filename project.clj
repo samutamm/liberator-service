@@ -6,7 +6,7 @@
                  [compojure "1.1.6"]
                  [hiccup "1.0.5"]
                  [ring-server "0.3.1"]
-                 [liberator "0.10.0"]
+                 [liberator "0.13"]
                  [cheshire "5.2.0"]
                  [ring/ring-jetty-adapter "1.2.2"]
                  [environ "0.5.0"]

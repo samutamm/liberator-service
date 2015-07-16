@@ -7,23 +7,21 @@
       [samutamm.models.db :as database]
       [clojure.data.json :as json]))
 
-
 (def users (atom ["John" "Jane"]))
 
 (defn parse-project [context] (json/read-str
                                (slurp (get-in context [:request :body]))
                                :key-fn keyword))
 (defn add-project-to-database
-  [context] (let [project (parse-project context)
-                                    id (+ 1 (count (database/get-all-projects)))]
-                                (do
-                                  (println (str "tänne päästiin" project))
-                                  (database/update-or-create-project id
+  [project] (let [id (+ 1 (count (database/get-all-projects)))]
+                                  (try
+                                    (database/update-or-create-project (:id project)
                                                                    (:projectname project)
                                                                    (:description project)
                                                                    (:tags project)
                                                                    (:projectstart project)
-                                                                   (:projectend project)))))
+                                                                   (:projectend project))
+                                    (catch Exception e (println (.getNextException e))))))
 
 (defn project-is-valid [project]
   (let [fields [:projectname :description :tags :projectstart :projectend]]
@@ -35,12 +33,14 @@
         :available-media-types ["application/json"])
 
 (defresource add-new-project
-         :malformed? (fn[ctx] (not (project-is-valid (parse-project ctx))))
+         :malformed? (fn[ctx] (let [project (parse-project ctx)
+                                    updated-ctx (assoc ctx :project project)
+                                    result (conj [] (not (project-is-valid project)) updated-ctx)]
+                                  result))
          :handle-malformed (fn [_] (generate-string (str "Malformed json!")))
          :allowed-methods [:post]
-         :available-media-types ["application/json"]
-         :post! (fn [ctx] (println (str "body: " (slurp (get-in ctx [:request :body])))))
-         :handle-created  (fn [_] (generate-string (str "created new project"))))
+         :post! (fn [ctx]  (add-project-to-database (:project ctx)))
+         :handle-created  (fn [ctx] (:project ctx)))
 
 (defresource delete-project [id]
          :allowed-methods [:delete]
@@ -52,6 +52,7 @@
          :allowed-methods [:put]
          :available-media-types ["application/json"]
          :put! (println (str "muokataan " id))
+         :new? false
          :handle-ok  (fn [_] (generate-string (str "updated project"))))
 
 (defroutes project-routes
@@ -59,4 +60,3 @@
   (POST "/projects" request add-new-project)
   (DELETE "/projects/:id" [id] (delete-project id))
   (PUT "/projects/:id" [id] (update-project id)))
-

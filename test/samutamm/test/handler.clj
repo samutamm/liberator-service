@@ -38,6 +38,7 @@
   (fact "POST project"
         (let [response (create-request-with-project-json testproject)]
           (:status response) => 201))
+  ;;      (:status (create-request-with-project-json {})) => 400)
 
   ;; (:status (create-request-with-project-json (assoc testproject :tags nil))) => 400
   ;;      (:status (create-request-with-project-json (dissoc testproject :description))) => 400)
@@ -55,5 +56,5 @@
   (fact "DELETE project/id returns status 204"
         (:status (create-request-and-execute :delete "/projects/1")) => 204)
 
-  (fact "PUT project/id return status 201"
-        (:status (create-request-and-execute :put "/projects/1")) => 201))
+  (fact "PUT project/id return status 204"
+        (:status (create-request-and-execute :put "/projects/1")) => 204))
