@@ -15,7 +15,7 @@
 (defn add-project-to-database
   [project] (let [id (+ 1 (count (database/get-all-projects)))]
                                   (try
-                                    (database/update-or-create-project (:id project)
+                                    (database/update-or-create-project (or (:id project) id)
                                                                    (:projectname project)
                                                                    (:description project)
                                                                    (:tags project)
@@ -33,6 +33,7 @@
         :available-media-types ["application/json"])
 
 (defresource add-new-project
+         :service-available? {:representation {:media-type "application/json"}}
          :malformed? (fn[ctx] (let [project (parse-project ctx)
                                     updated-ctx (assoc ctx :project project)
                                     result (conj [] (not (project-is-valid project)) updated-ctx)]

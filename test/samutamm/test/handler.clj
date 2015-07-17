@@ -5,7 +5,7 @@
         cheshire.core))
 
 (def testproject {:id "77" :projectname "Big-T" :description "cool" :tags "#"
-                            :projectstart "2000-03-19T22:00:00.000-00:00" :projectend "2000-03-19T22:00:00.000-00:00"})
+                            :projectstart {:year 2000 :month 6 :day 10} :projectend {:year 2000 :month 8 :day 10}})
 
 (defn contains-string [body string]
     (let [body-string (slurp body)]
@@ -36,9 +36,12 @@
         (:status (create-request-and-execute :get "/invalidpath")) => 404)
 
   (fact "POST project"
-        (let [response (create-request-with-project-json testproject)]
-          (:status response) => 201))
-  ;;      (:status (create-request-with-project-json {})) => 400)
+        (let [response (create-request-with-project-json testproject)
+              get-response (create-request-and-execute :get "/projects")]
+          (:status response) => 201
+          (:body response) => "{\"description\":\"cool\",\"tags\":\"#\",\"projectend\":{\"day\":10,\"month\":8,\"year\":2000},\"projectstart\":{\"day\":10,\"month\":6,\"year\":2000},\"id\":\"77\",\"projectname\":\"Big-T\"}"
+          (:body get-response) => (fn[body] (.contains body (:id testproject))))
+        (:status (create-request-with-project-json {})) => 400)
 
   ;; (:status (create-request-with-project-json (assoc testproject :tags nil))) => 400
   ;;      (:status (create-request-with-project-json (dissoc testproject :description))) => 400)
