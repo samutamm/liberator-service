@@ -49,30 +49,28 @@
       (doall res))))
 
 (defn update-or-create-project [id projectname description tags projectstart projectend]
+  "Updates the project defined by id. If no project found with that id, new project will
+  be created with descending id serial. No project should have id zero, so that can be
+  used when creating new project."
   (let [timestamp (java.sql.Timestamp. (.getTime (java.util.Date.)))
         start (make-sql-date (:year projectstart) (:month projectstart) (:day projectstart))
         end (make-sql-date (:year projectend) (:month projectend) (:day projectend))]
     (sql/with-connection db
-      (sql/update-or-insert-values
-      :projects
-      ["id=?" id]
-      {:id id
-       :projectname projectname
-       :description description
-       :tags tags
-       :projectstart start
-       :projectend end
-       :created timestamp}))))
-
-(defn generate-new-id []
-  (sql/with-connection db
-    (sql/with-query-results res
-      ["Select curval(pg_get_serial_sequence('projects', 'id')) as new_id"]
-      (first res))))
+      (try
+        (sql/update-or-insert-values
+         :projects
+         ["id=?" id]
+         {:projectname projectname
+          :description description
+          :tags tags
+          :projectstart start
+          :projectend end
+          :created timestamp})
+        (catch Exception e (.printStackTrace (.getNextException e)))))))
 
 (defn delete-all-projects []
   (sql/with-connection db
-    (sql/delete-rows :projects ["id!=?" "blaablaa"])))
+    (sql/delete-rows :projects ["id!=?" 0])))
 
 (defn delete-project [id]
   (sql/with-connection db
@@ -88,3 +86,9 @@
 (defn migrate-db []
   (if (not (projects-table-is-created?))
     (create-projects-table)))
+
+(defn drop-projects-table []
+  (sql/with-connection db
+    (try
+      (sql/drop-table :projects)
+      (catch Exception _))))
