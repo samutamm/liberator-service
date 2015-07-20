@@ -4,7 +4,7 @@
         samutamm.handler
         cheshire.core))
 
-(def testproject {:id "77" :projectname "Big-T" :description "cool" :tags "#"
+(def testproject {:id 77 :projectname "Big-T" :description "cool" :tags "#"
                             :projectstart {:year 2000 :month 6 :day 10} :projectend {:year 2000 :month 8 :day 10}})
 
 (defn contains-string [body string]
@@ -39,12 +39,11 @@
         (let [response (create-request-with-project-json testproject)
               get-response (create-request-and-execute :get "/projects")]
           (:status response) => 201
-          (:body response) => "{\"description\":\"cool\",\"tags\":\"#\",\"projectend\":{\"day\":10,\"month\":8,\"year\":2000},\"projectstart\":{\"day\":10,\"month\":6,\"year\":2000},\"id\":\"77\",\"projectname\":\"Big-T\"}"
-          (:body get-response) => (fn[body] (.contains body (:id testproject))))
-        (:status (create-request-with-project-json {})) => 400)
-
-  ;; (:status (create-request-with-project-json (assoc testproject :tags nil))) => 400
-  ;;      (:status (create-request-with-project-json (dissoc testproject :description))) => 400)
+          (:body response) => (fn[body] (.contains body (:projectname testproject)))
+          (:body get-response) => (fn[body] (.contains body (:projectname testproject))))
+        (:status (create-request-with-project-json {})) => 400
+        (:status (create-request-with-project-json (assoc testproject :tags nil))) => 400
+        (:status (create-request-with-project-json (dissoc testproject :description))) => 400)
 
 
   (fact "GET project"
