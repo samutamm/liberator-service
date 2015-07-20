@@ -24,6 +24,24 @@
 (defn create-request-with-project-json [project]
   (app (create-request project)))
 
+(comment
+
+  FIX THIS!
+
+(defn count-projects [return-string]
+  "counts how many projects given string contains"
+  (let [string-vector (clojure.string/split return-string #" ")]
+    (loop [strings string-vector
+           result 0]
+      (cond
+       (empty? strings)
+         result
+       (.contains (first strings) ":projectname")
+         (recur (rest strings) (inc result))
+       :else
+         (recur (rest strings) result)))))
+)
+
 ;;tests
 
 (with-state-changes [(before :facts (init))]
@@ -46,7 +64,7 @@
         (:status (create-request-with-project-json (dissoc testproject :description))) => 400)
 
 
-  (fact "GET project"
+  (fact "GET all projects"
         (let [response (create-request-and-execute :get "/projects")
               fields ["id" "projectname" "description" "tags" "projectstart" "projectend" "created"]]
           (:status response) => 200
@@ -55,8 +73,10 @@
                                                 (map  (fn [field]
                                                         (.contains body field)) fields)))))
 
-  (fact "DELETE project/id returns status 204"
-        (:status (create-request-and-execute :delete "/projects/1")) => 204)
+  (with-state-changes [(before :facts (create-request-with-project-json testproject))]
+    (fact "DELETE project/id returns status 204"
+          (let [project-count (count ())]
+          (:status (create-request-and-execute :delete "/projects/1")) => 204)))
 
   (fact "PUT project/id return status 204"
         (:status (create-request-and-execute :put "/projects/1")) => 204))
