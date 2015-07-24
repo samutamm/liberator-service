@@ -10,7 +10,8 @@
             [samutamm.routes.projects :refer [project-routes]]
             [samutamm.models.db :as database]
             [environ.core :refer [env]]
-            [liberator.dev :refer [wrap-trace]]))
+            [liberator.dev :refer [wrap-trace]]
+            [ring.adapter.jetty :refer [run-jetty]]))
 
 (defn init [] (database/migrate-db))
 
@@ -26,3 +27,13 @@
       (handler/site)
       (wrap-base-url)
       (wrap-trace :header)))
+
+(def header-buffer-size 100000)
+
+(defn -main[]
+  (do
+    (println "kohta käynnistyy!")
+    (run-jetty app { :port 3000
+                     :configurator (fn [jetty]
+                                     (doseq [connector (.getConnectors jetty)]
+                                       (.setRequestHeaderSize connector header-buffer-size)))})))

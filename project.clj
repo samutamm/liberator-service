@@ -20,6 +20,7 @@
             [lein-cloverage "1.0.6"]
             [lein-midje "3.1.3"]
             [lein-environ "0.5.0"]]
+  :main samutamm.handler
   :ring {:handler samutamm.handler/app
          :init samutamm.handler/init
          :destroy samutamm.handler/destroy}
