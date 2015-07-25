@@ -11,7 +11,7 @@
     (let [body-string (slurp body)]
       (.contains body-string string)))
 
-(defn create-request-and-execute [method-symbol path]
+(defn execute-request [method-symbol path]
   (app (request method-symbol path)))
 
 (defn create-request [project]
@@ -21,62 +21,64 @@
      "application/json;charset=UTF-8")
     (generate-string project)))
 
-(defn create-request-with-project-json [project]
+(defn execute-request-with-json [project]
   (app (create-request project)))
 
-(comment
-
-  FIX THIS!
 
 (defn count-projects [return-string]
   "counts how many projects given string contains"
-  (let [string-vector (clojure.string/split return-string #" ")]
+  (let [string-vector (clojure.string/split return-string #",")]
     (loop [strings string-vector
            result 0]
       (cond
        (empty? strings)
          result
-       (.contains (first strings) ":projectname")
+       (.contains (first strings) "projectname")
          (recur (rest strings) (inc result))
        :else
          (recur (rest strings) result)))))
-)
+
 
 ;;tests
 
 (with-state-changes [(before :facts (init))]
   (fact "main route"
-        (let [response (create-request-and-execute :get "/")]
+        (let [response (execute-request :get "/")]
           (:status response) => 200
           (:body response) => (fn [body] (contains-string body "<title>samutamm</title>"))))
 
   (fact "not-found route"
-        (:status (create-request-and-execute :get "/invalidpath")) => 404)
+        (:status (execute-request :get "/invalidpath")) => 404)
 
   (fact "POST project"
-        (let [response (create-request-with-project-json testproject)
-              get-response (create-request-and-execute :get "/projects")]
+        (let [project-count (count-projects (:body (execute-request :get "/projects")))
+              response (execute-request-with-json testproject)
+              get-response (execute-request :get "/projects")]
+          (count-projects (:body get-response)) => (inc project-count)
           (:status response) => 201
           (:body response) => (fn[body] (.contains body (:projectname testproject)))
           (:body get-response) => (fn[body] (.contains body (:projectname testproject))))
-        (:status (create-request-with-project-json {})) => 400
-        (:status (create-request-with-project-json (assoc testproject :tags nil))) => 400
-        (:status (create-request-with-project-json (dissoc testproject :description))) => 400)
+        (:status (execute-request-with-json {})) => 400
+        (:status (execute-request-with-json (assoc testproject :tags nil))) => 400
+        (:status (execute-request-with-json (dissoc testproject :description))) => 400)
 
 
-  (fact "GET all projects"
-        (let [response (create-request-and-execute :get "/projects")
-              fields ["id" "projectname" "description" "tags" "projectstart" "projectend" "created"]]
-          (:status response) => 200
-          (get (:headers response) "Content-Type") => "application/json;charset=UTF-8"
-          (:body response) => (fn[body] (every? true?
-                                                (map  (fn [field]
-                                                        (.contains body field)) fields)))))
+  (with-state-changes [(before :facts (execute-request-with-json testproject))]
+    (fact "GET all projects"
+          (let [response (execute-request :get "/projects")
+                fields ["id" "projectname" "description" "tags" "projectstart" "projectend" "created"]]
+            (:status response) => 200
+            (get (:headers response) "Content-Type") => "application/json;charset=UTF-8"
+            (:body response) => (fn[body] (every? true?
+                                                  (map  (fn [field]
+                                                          (.contains body field)) fields))))))
 
-  (with-state-changes [(before :facts (create-request-with-project-json testproject))]
+  (with-state-changes [(before :facts (execute-request-with-json testproject))]
     (fact "DELETE project/id returns status 204"
-          (let [project-count (count ())]
-          (:status (create-request-and-execute :delete "/projects/1")) => 204)))
+          (let [project-count (count-projects (:body (execute-request :get "/projects")))]
+            (:status (execute-request :delete "/projects/77")) => 204
+            (count-projects (:body (execute-request :get "/projects"))) => (dec project-count)
+            (generate-string testproject) => "asd")))
 
   (fact "PUT project/id return status 204"
-        (:status (create-request-and-execute :put "/projects/1")) => 204))
+        (:status (execute-request :put "/projects/1")) => 204))

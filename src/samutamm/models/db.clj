@@ -74,7 +74,9 @@
 
 (defn delete-project [id]
   (sql/with-connection db
-    (sql/delete-rows :projects ["id=?" id])))
+    (try
+      (sql/delete-rows :projects ["id=?" id])
+    (catch Exception e (.printStackTrace (.getNextException e))))))
 
 (defn projects-table-is-created? []
   (sql/with-connection db
@@ -85,7 +87,8 @@
 
 (defn migrate-db []
   (if (not (projects-table-is-created?))
-    (create-projects-table)))
+    (create-projects-table)
+    (delete-all-projects)))
 
 (defn drop-projects-table []
   (sql/with-connection db
