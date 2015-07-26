@@ -50,8 +50,13 @@
          :delete! (database/delete-project (Integer/parseInt id))
          :handle-no-content  (fn [_] (generate-string (str "deleted project"))))
 
+(defresource get-project [id]
+         :allowed-methods [:get]
+         :available-media-types ["application/json"]
+         :handle-ok  (fn [_] (generate-string (database/get-project (Integer/parseInt id)))))
+
 (defroutes project-routes
   (GET "/projects" request get-all-projects)
   (POST "/projects" request add-new-project)
   (DELETE "/projects/:id" [id] (delete-project id))
-  (PUT "/projects/:id" [id] (update-project id)))
+  (GET "/projects/:id" [id] (get-project id)))

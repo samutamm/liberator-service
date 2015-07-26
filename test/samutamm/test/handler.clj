@@ -79,4 +79,11 @@
               project-id (Integer/parseInt (subs unparsed-id 4 (count unparsed-id)))
               project-count (count-projects (:body (execute-request :get "/projects")))]
           (:status (execute-request :delete (str "/projects/" project-id))) => 204
-          (count-projects (:body (execute-request :get "/projects"))) => (dec project-count))))
+          (count-projects (:body (execute-request :get "/projects"))) => (dec project-count)))
+
+  (fact "GET single project"
+        (let [unparsed-id  (:body (execute-request-with-json testproject))
+              project-id (Integer/parseInt (subs unparsed-id 4 (count unparsed-id)))
+              single-project (execute-request :get (str "/projects/" project-id))]
+          (:body single-project) => (fn[b] (not (= b "Not Found")))
+          (:body single-project) => (fn[body] (.contains body (:projectname testproject))))))
