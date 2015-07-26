@@ -8,7 +8,6 @@
       [clojure.data.json :as json]
       [liberator.representation :refer [ring-response]]))
 
-(def users (atom ["John" "Jane"]))
 
 (defn parse-project [context] (json/read-str
                                (slurp (get-in context [:request :body]))
@@ -50,13 +49,6 @@
          :available-media-types ["application/json"]
          :delete! (database/delete-project (Integer/parseInt id))
          :handle-no-content  (fn [_] (generate-string (str "deleted project"))))
-
-(defresource update-project [id]
-         :allowed-methods [:put]
-         :available-media-types ["application/json"]
-         :put! (println (str "muokataan " id))
-         :new? false
-         :handle-ok  (fn [_] (generate-string (str "updated project"))))
 
 (defroutes project-routes
   (GET "/projects" request get-all-projects)

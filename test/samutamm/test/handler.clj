@@ -53,10 +53,11 @@
   (fact "POST project"
         (let [project-count (count-projects (:body (execute-request :get "/projects")))
               response (execute-request-with-json testproject)
+              project-id (Integer/parseInt (subs (:body response) 4 (count (:body response))))
               get-response (execute-request :get "/projects")]
           (count-projects (:body get-response)) => (inc project-count)
           (:status response) => 201
-          (:body response) => (fn[body] (.contains body (:projectname testproject)))
+          (:body response) => (fn[body] (.contains body "ID: "))
           (:body get-response) => (fn[body] (.contains body (:projectname testproject))))
         (:status (execute-request-with-json {})) => 400
         (:status (execute-request-with-json (assoc testproject :tags nil))) => 400
@@ -73,12 +74,9 @@
                                                   (map  (fn [field]
                                                           (.contains body field)) fields))))))
 
-  (with-state-changes [(before :facts (execute-request-with-json testproject))]
-    (fact "DELETE project/id returns status 204"
-          (let [project-count (count-projects (:body (execute-request :get "/projects")))]
-            (:status (execute-request :delete "/projects/77")) => 204
-            (count-projects (:body (execute-request :get "/projects"))) => (dec project-count)
-            (generate-string testproject) => "asd")))
-
-  (fact "PUT project/id return status 204"
-        (:status (execute-request :put "/projects/1")) => 204))
+  (fact "DELETE project/id returns status 204"
+        (let [unparsed-id  (:body (execute-request-with-json testproject))
+              project-id (Integer/parseInt (subs unparsed-id 4 (count unparsed-id)))
+              project-count (count-projects (:body (execute-request :get "/projects")))]
+          (:status (execute-request :delete (str "/projects/" project-id))) => 204
+          (count-projects (:body (execute-request :get "/projects"))) => (dec project-count))))
