@@ -28,6 +28,7 @@
   (let [fields [:projectname :description :tags :projectstart :projectend]]
     (every? true? (map (fn [field] (not (nil? (field project)))) fields))))
 
+
 (defresource get-all-projects
         :allowed-methods [:get]
         :handle-ok (fn [_] (generate-string (database/get-all-projects)))
@@ -36,25 +37,13 @@
 (defresource add-new-project
          :allowed-methods [:post]
          :available-media-types ["application/json"]
-         :service-available? {:representation {:media-type "application/json"}}
          :malformed? (fn[ctx] (let [project (parse-project ctx)
-                                    updated-ctx (assoc ctx :project project)
+                                    updated-ctx (assoc ctx ::project project)
                                     result (conj [] (not (project-is-valid project)) updated-ctx)]
                                   result))
          :handle-malformed (fn [_] (generate-string (str "Malformed json!")))
-         :post! (fn [ctx]  (assoc ctx :project (add-project-to-database (:project ctx))))
-         :handle-created  (fn [ctx] (let [response ( generate-string (get-in ctx [:project :id]))]
-                                      (do
-                                        (println (str "RESPONSE: " response))
-                                        (println (keys ctx))
-                                        (println (map count ctx))
-                                        (println (get-in ctx [:representation]))
-                                        (println (get-in ctx [:resource]))
-                                        (println (get-in ctx [:request]))
-                                        (println (get-in ctx [:project]))
-                                        (println (get-in ctx [:status]))
-                                        (println (get-in ctx [:message]))
-                                        response))))
+         :post! (fn [ctx]  { ::data (str "ID: " (:id (add-project-to-database  (::project ctx)))) })
+         :handle-created ::data)
 
 (defresource delete-project [id]
          :allowed-methods [:delete]

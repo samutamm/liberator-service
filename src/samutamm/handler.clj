@@ -25,10 +25,9 @@
 (def app
   (-> (routes home-routes project-routes app-routes)
       (handler/site)
-      (wrap-base-url)
-      (wrap-trace :header)))
+      (wrap-base-url)))
 
-(def header-buffer-size 100000)
+(def header-buffer-size 1000000)
 
 (defn -main[]
   (do
