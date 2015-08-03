@@ -1,1 +1,1 @@
-var samutamm = angular.module('samutammApp', ['ngRoute']);
+var samutamm = angular.module('samutammApp', ['ngRoute', 'ngResource']);
