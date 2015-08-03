@@ -5,6 +5,10 @@ angular.module('samutammApp').config(function ($routeProvider) {
             })
             .when('/projects', {
               templateUrl: "templates/home.html",
-              controller: "ProjectController"
+              controller: "ProjectsController"
+            })
+            .when('/projects/:id', {
+              templateUrl: "templates/show.html",
+              controller: "ProjectShowController"
             })
 });
