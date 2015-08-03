@@ -1,1 +1,2 @@
-var samutamm = angular.module('samutammApp', ['ngRoute', 'ngResource', 'ngTagsInput']);
+var samutamm = angular.module('samutammApp', ['ngRoute', 'ngResource',
+                              'ngTagsInput', 'ui.bootstrap']);

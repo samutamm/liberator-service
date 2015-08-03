@@ -1,3 +1,9 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">New Project</h1>
+    </div>
+</div>
+
 <form name="projectForm">
             <p>
                 <label>Projectname</label>
@@ -10,20 +16,21 @@
                        ng-class="{invalid : projectForm.description.$invalid && projectForm.description.$dirty}">
             </p>
             <p>
-                <label>Tags</label>
-                <tags-input ng-model="project.tags"></tags-input>
-            </p>
-            <p>
                 <label>Project started</label>
-                <input name="start" type="text" ng-model="project.projectstart"
-                       ng-class="{invalid : projectForm.start.$invalid && projectForm.start.$dirty}">
+                <input type="date" ng-model="project.projectstart" datepicker-popup datepicker-options="dateOptions"
+                       init-date="today" format="dd.MM.yyyy">
             </p>
             <p>
                 <label>Project ended</label>
-                <input name="end" type="text" ng-model="project.projectend"
-                       ng-class="{invalid : projectForm.end.$invalid && projectForm.end.$dirty}">
+                <input type="date" ng-model="project.projectend" datepicker-popup datepicker-options="dateOptions"
+                       init-date="today" format="dd.MM.yyyy">
             </p>
             <p>
-                <button type="submit" ng-disabled="register-form.$invalid" ng-click="addProject()">Add project</button>
+                <label>Tags</label>
+                <tags-input ng-model="project.tags" required ></tags-input>
+            </p>
+            <p>
+                <button class="btn btn-default" ng-disabled="projectForm.$invalid"
+                        ng-click="addProject()">Add project</button>
             </p>
         </form>
