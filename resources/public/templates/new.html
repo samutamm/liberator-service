@@ -1,0 +1,29 @@
+<form name="projectForm">
+            <p>
+                <label>Projectname</label>
+                <input name="projectname" type="text" ng-model="project.projectname" required ng-minlength="3"
+                       ng-class="{invalid : projectForm.projectname.$invalid && projectForm.projectname.$dirty}">
+            </p>
+            <p>
+                <label>Description</label>
+                <input name="description" type="text" ng-model="project.description" required ng-minlength="8"
+                       ng-class="{invalid : projectForm.description.$invalid && projectForm.description.$dirty}">
+            </p>
+            <p>
+                <label>Tags</label>
+                <tags-input ng-model="project.tags"></tags-input>
+            </p>
+            <p>
+                <label>Project started</label>
+                <input name="start" type="text" ng-model="project.projectstart"
+                       ng-class="{invalid : projectForm.start.$invalid && projectForm.start.$dirty}">
+            </p>
+            <p>
+                <label>Project ended</label>
+                <input name="end" type="text" ng-model="project.projectend"
+                       ng-class="{invalid : projectForm.end.$invalid && projectForm.end.$dirty}">
+            </p>
+            <p>
+                <button type="submit" ng-disabled="register-form.$invalid" ng-click="addProject()">Add project</button>
+            </p>
+        </form>
