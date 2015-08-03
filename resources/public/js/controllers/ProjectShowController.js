@@ -1,3 +1,3 @@
-angular.module('samutammApp').controller('ProjectShowController', function ($scope, $http) {
-  console.log("Moikka!");
+angular.module('samutammApp').controller('ProjectShowController', function (Project, $scope, $routeParams) {
+    $scope.project = Project.get({id: $routeParams.id});
 });
