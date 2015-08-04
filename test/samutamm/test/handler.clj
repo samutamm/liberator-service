@@ -24,21 +24,6 @@
 (defn execute-request-with-json [project]
   (app (create-request project)))
 
-
-(defn count-projects [return-string]
-  "counts how many projects given string contains"
-  (let [string-vector (clojure.string/split return-string #",")]
-    (loop [strings string-vector
-           result 0]
-      (cond
-       (empty? strings)
-         result
-       (.contains (first strings) "projectname")
-         (recur (rest strings) (inc result))
-       :else
-         (recur (rest strings) result)))))
-
-
 ;;tests
 
 (with-state-changes [(before :facts (init))]
@@ -51,13 +36,13 @@
         (:status (execute-request :get "/invalidpath")) => 404)
 
   (fact "POST project"
-        (let [project-count (count-projects (:body (execute-request :get "/projects")))
+        (let [project-count (count (parse-string (:body (execute-request :get "/projects"))))
               response (execute-request-with-json testproject)
-              project-id (Integer/parseInt (subs (:body response) 4 (count (:body response))))
+              project-id (:id (parse-string (:body response) true))
               get-response (execute-request :get "/projects")]
-          (count-projects (:body get-response)) => (inc project-count)
+          (count (parse-string (:body get-response))) => (inc project-count)
           (:status response) => 201
-          (:body response) => (fn[body] (.contains body "ID: "))
+          (:body response) => (fn[body] (.contains body "id"))
           (:body get-response) => (fn[body] (.contains body (:projectname testproject))))
         (:status (execute-request-with-json {})) => 400
         (:status (execute-request-with-json (assoc testproject :tags nil))) => 400
@@ -75,15 +60,13 @@
                                                           (.contains body field)) fields))))))
 
   (fact "DELETE project/id returns status 204"
-        (let [unparsed-id  (:body (execute-request-with-json testproject))
-              project-id (Integer/parseInt (subs unparsed-id 4 (count unparsed-id)))
-              project-count (count-projects (:body (execute-request :get "/projects")))]
+        (let [project-id  (:id (parse-string (:body (execute-request-with-json testproject)) true))
+              project-count (count (parse-string (:body (execute-request :get "/projects"))))]
           (:status (execute-request :delete (str "/projects/" project-id))) => 204
-          (count-projects (:body (execute-request :get "/projects"))) => (dec project-count)))
+          (count (parse-string (:body (execute-request :get "/projects")))) => (dec project-count)))
 
   (fact "GET single project"
-        (let [unparsed-id  (:body (execute-request-with-json testproject))
-              project-id (Integer/parseInt (subs unparsed-id 4 (count unparsed-id)))
+        (let [project-id  (:id (parse-string (:body (execute-request-with-json testproject)) true))
               single-project (execute-request :get (str "/projects/" project-id))]
           (:body single-project) => (fn[b] (not (= b "Not Found")))
           (:body single-project) => (fn[body] (.contains body (:projectname testproject))))))
