@@ -1,4 +1,6 @@
-angular.module('samutammApp').controller('ProjectCreateController', function (Project, $scope) {
+angular.module('samutammApp').controller('ProjectCreateController', function (Project, $scope, $location) {
+    $scope.isSubmitting = false;
+
     $scope.today = function() {
       var today = new Date();
       var dd = today.getDate();
@@ -18,11 +20,38 @@ angular.module('samutammApp').controller('ProjectCreateController', function (Pr
     $scope.today()
 
     $scope.addProject = function() {
-      console.log($scope.project);
+      $scope.isSubmitting = true;
+      var project = createProjectObject($scope.project);
+      project.$save().then(function(response) {
+        console.log("Uusi id: " + response.id);
+        $location.path("/projects");
+      }).finally(function() {
+        $scope.isSubmitting = false;
+      });
     }
 
     $scope.dateOptions = {
       formatYear: 'yy',
       startingDay: 1
+    }
+
+    function createProjectObject(project) {
+      var projectToSend = new Project();
+      projectToSend.projectstart = createDateJson(project.projectstart);
+      projectToSend.projectend = createDateJson(project.projectend);
+      projectToSend.tags = project.tags.map(function(tag) {
+         return tag.text
+      }).join(";");
+      projectToSend.projectname = project.projectname;
+      projectToSend.description = project.description;
+      return projectToSend;
+    }
+
+    function createDateJson(date) {
+       return {
+         year: date.getFullYear(),
+         month: date.getMonth(),
+         day: date.getDate()
+      };
     }
 });

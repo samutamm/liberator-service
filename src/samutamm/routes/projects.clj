@@ -41,7 +41,7 @@
                                     result (conj [] (not (project-is-valid project)) updated-ctx)]
                                   result))
          :handle-malformed (fn [_] (generate-string (str "Malformed json!")))
-         :post! (fn [ctx]  { ::data (str "ID: " (:id (add-project-to-database  (::project ctx)))) })
+         :post! (fn [ctx]  { ::data (generate-string (add-project-to-database  (::project ctx))) })
          :handle-created ::data)
 
 (defresource delete-project [id]

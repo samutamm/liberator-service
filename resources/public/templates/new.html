@@ -31,6 +31,6 @@
             </p>
             <p>
                 <button class="btn btn-default" ng-disabled="projectForm.$invalid"
-                        ng-click="addProject()">Add project</button>
+                        ng-click="addProject()">{{isSubmitting ? 'saving...' : 'Save'}}</button>
             </p>
         </form>
