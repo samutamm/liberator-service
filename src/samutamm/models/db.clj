@@ -88,7 +88,13 @@
 (defn migrate-db []
   (if (not (projects-table-is-created?))
     (create-projects-table)
-    (delete-all-projects)))
+    (do (delete-all-projects)
+      (update-or-create-project (:id exampleproject)
+                                (:projectname exampleproject)
+                                (:description exampleproject)
+                                (:tags exampleproject)
+                                (:projectstart exampleproject)
+                                (:projectend exampleproject)))))
 
 (defn drop-projects-table []
   (sql/with-connection db
