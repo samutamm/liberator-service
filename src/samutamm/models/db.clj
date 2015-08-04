@@ -86,15 +86,17 @@
       (pos? (:count (first res))))))
 
 (defn migrate-db []
-  (if (not (projects-table-is-created?))
-    (create-projects-table)
-    (do (delete-all-projects)
-      (update-or-create-project (:id exampleproject)
-                                (:projectname exampleproject)
-                                (:description exampleproject)
-                                (:tags exampleproject)
-                                (:projectstart exampleproject)
-                                (:projectend exampleproject)))))
+  (try
+    (if (not (projects-table-is-created?))
+      (create-projects-table)
+      (do (delete-all-projects)
+        (update-or-create-project (:id exampleproject)
+                                  (:projectname exampleproject)
+                                  (:description exampleproject)
+                                  (:tags exampleproject)
+                                  (:projectstart exampleproject)
+                                  (:projectend exampleproject))))
+    (catch Exception e (.printStackTrace (.getNextException e)))))
 
 (defn drop-projects-table []
   (sql/with-connection db
