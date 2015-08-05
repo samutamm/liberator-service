@@ -31,8 +31,7 @@
    {:ring {:open-browser? false,
            :stacktraces? false,
            :auto-reload? false}
-    :env {:port 3000
-          :db-url "//localhost/projects"
+    :env {:db-url "//localhost/projects"
           :db-user "postgres"
           :db-pass "postgres"}}
    :dev
