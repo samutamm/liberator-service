@@ -12,16 +12,12 @@
 (defn parse-project [context] (json/read-str
                                (slurp (get-in context [:request :body]))
                                :key-fn keyword))
-(defn add-project-to-database
-  [project] (let [id (+ 1 (count (database/get-all-projects)))]
-                                  (try
-                                    (database/update-or-create-project (or (:id project) id)
-                                                                   (:projectname project)
-                                                                   (:description project)
-                                                                   (:tags project)
-                                                                   (:projectstart project)
-                                                                   (:projectend project))
-                                    (catch Exception e (println (.getNextException e))))))
+
+(defn add-project-to-database [project]
+  (try
+    (database/update-or-create-project project)
+    (catch Exception e (println (.getNextException e)))))
+
 
 (defn project-is-valid [project]
   (let [fields [:projectname :description :tags :projectstart :projectend]]

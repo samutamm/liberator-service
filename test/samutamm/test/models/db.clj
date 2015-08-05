@@ -19,12 +19,7 @@
 
 (defn upd-or-create [field newvalue]
   (let [proj (assoc testproject field newvalue)]
-    (update-or-create-project (:id proj)
-                              (:projectname proj)
-                              (:description proj)
-                              (:tags proj)
-                              (:projectstart proj)
-                              (:projectend proj))))
+    (update-or-create-project  proj)))
 
 (with-state-changes [(before :facts (clean-database))]
   (fact "database is created"

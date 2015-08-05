@@ -7,3 +7,6 @@
 
 (def exampleproject {:id 1 :projectname "Proju" :description "cool" :tags "#"
                             :projectstart {:year 2000 :month 6 :day 10} :projectend {:year 2000 :month 8 :day 10}})
+
+(defn format-date [date-hash]
+  (make-sql-date (:year date-hash) (:month date-hash) (:day date-hash)))

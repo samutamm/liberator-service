@@ -35,6 +35,8 @@
        [:tags "varchar(200)"]
        [:projectstart "date"]
        [:projectend "date"]
+       [:image "varchar(200)"]
+       [:links "varchar(400)"]
        [:created "timestamp"]))))
 
 (defn get-project [id]
@@ -48,21 +50,23 @@
       ["select * from projects ORDER BY created DESC"]
       (doall res))))
 
-(defn update-or-create-project [id projectname description tags projectstart projectend]
+(defn update-or-create-project [project]
   "Updates the project defined by id. If no project found with that id, new project will
   be created with descending id serial. No project should have id zero, so that can be
   used when creating new project."
   (let [timestamp (java.sql.Timestamp. (.getTime (java.util.Date.)))
-        start (make-sql-date (:year projectstart) (:month projectstart) (:day projectstart))
-        end (make-sql-date (:year projectend) (:month projectend) (:day projectend))]
+        start (format-date (:projectstart project))
+        end (format-date (:projectend project))]
     (sql/with-connection db
       (try
         (sql/update-or-insert-values
          :projects
-         ["id=?" id]
-         {:projectname projectname
-          :description description
-          :tags tags
+         ["id=?" (:id project)]
+         {:projectname (:projectname project)
+          :description (:description project)
+          :tags (:tags project)
+          :image (:image project)
+          :links (:links project)
           :projectstart start
           :projectend end
           :created timestamp})
@@ -90,12 +94,7 @@
     (if (not (projects-table-is-created?))
       (create-projects-table)
       (do (delete-all-projects)
-        (update-or-create-project (:id exampleproject)
-                                  (:projectname exampleproject)
-                                  (:description exampleproject)
-                                  (:tags exampleproject)
-                                  (:projectstart exampleproject)
-                                  (:projectend exampleproject))))
+        (update-or-create-project exampleproject)))
     (catch Exception e (.printStackTrace (.getNextException e)))))
 
 (defn drop-projects-table []
