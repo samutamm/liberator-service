@@ -30,6 +30,10 @@
                 <tags-input ng-model="project.tags" required ></tags-input>
             </p>
             <p>
+              <label>Image</label>
+              <input name="file" type="file" file />
+            </p>
+            <p>
                 <button class="btn btn-default" ng-disabled="projectForm.$invalid"
                         ng-click="addProject()">{{isSubmitting ? 'saving...' : 'Save'}}</button>
             </p>

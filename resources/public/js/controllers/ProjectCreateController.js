@@ -22,6 +22,8 @@ angular.module('samutammApp').controller('ProjectCreateController', function (Pr
     $scope.addProject = function() {
       $scope.isSubmitting = true;
       var project = createProjectObject($scope.project);
+
+      $scope.upload();
       project.$save().then(function(response) {
         console.log("Uusi id: " + response.id);
         $location.path("/projects");
@@ -44,6 +46,7 @@ angular.module('samutammApp').controller('ProjectCreateController', function (Pr
       }).join(";");
       projectToSend.projectname = project.projectname;
       projectToSend.description = project.description;
+      projectToSend.image = $scope.file.name;
       return projectToSend;
     }
 
@@ -53,5 +56,35 @@ angular.module('samutammApp').controller('ProjectCreateController', function (Pr
          month: date.getMonth(),
          day: date.getDate()
       };
+    }
+
+    $scope.creds = {
+      bucket: 'samutamm-images',
+      access_key: 'AKIAJWPUEFZKMWZVTTEQ',
+      secret_key: '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'
+    }
+
+    $scope.upload = function() {
+      AWS.config.update({ accessKeyId: $scope.creds.access_key, secretAccessKey: $scope.creds.secret_key });
+      AWS.config.region = 'eu-central-1';
+      var bucket = new AWS.S3({ params: { Bucket: $scope.creds.bucket } });
+
+      if($scope.file) {
+        var params = { Key: $scope.file.name, ContentType: $scope.file.type, Body: $scope.file, ServerSideEncryption: 'AES256' };
+
+        bucket.putObject(params, function(err, data) {
+          if(err) {
+            alert(err.message);
+            return false;
+          }else {
+            console.log("data: " + data);
+            debugger;
+          }
+        }).on('httpUploadProgress',function(progress) {
+              console.log(Math.round(progress.loaded / progress.total * 100) + '% done');
+            });
+      }else {
+        alert('No File Selected');
+      }
     }
 });

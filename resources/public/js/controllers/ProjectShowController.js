@@ -1,3 +1,6 @@
 angular.module('samutammApp').controller('ProjectShowController', function (Project, $scope, $routeParams) {
-    $scope.project = Project.get({id: $routeParams.id});
+    Project.get({id: $routeParams.id}).$promise.then(function(response) {
+      $scope.imageUrl = "https://s3.eu-central-1.amazonaws.com/samutamm-images/" + response.image;
+      $scope.project = response;
+    });
 });
