@@ -1,4 +1,4 @@
-angular.module('samutammApp').controller('ProjectCreateController', function (Project, $scope, $location) {
+angular.module('samutammApp').controller('ProjectCreateController', function (AWSCredentials, Project, $scope, $location) {
     $scope.isSubmitting = false;
 
     $scope.today = function() {
@@ -58,11 +58,7 @@ angular.module('samutammApp').controller('ProjectCreateController', function (Pr
       };
     }
 
-    $scope.creds = {
-      bucket: 'samutamm-images',
-      access_key: '',
-      secret_key: ''
-    }
+    $scope.creds = AWSCredentials.get();
 
     $scope.upload = function() {
       AWS.config.update({ accessKeyId: $scope.creds.access_key, secretAccessKey: $scope.creds.secret_key });
@@ -78,7 +74,6 @@ angular.module('samutammApp').controller('ProjectCreateController', function (Pr
             return false;
           }else {
             console.log("data: " + data);
-            debugger;
           }
         }).on('httpUploadProgress',function(progress) {
               console.log(Math.round(progress.loaded / progress.total * 100) + '% done');
