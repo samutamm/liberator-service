@@ -26,8 +26,8 @@
 
 (defresource get-all-projects
         :allowed-methods [:get]
-        :handle-ok (fn [_] (generate-string (database/get-all-projects)))
-        :available-media-types ["application/json"])
+        :available-media-types ["application/json"]
+        :handle-ok (fn [_] (generate-string (database/get-all-projects))))
 
 (defresource add-new-project
          :allowed-methods [:post]
@@ -51,8 +51,16 @@
          :available-media-types ["application/json"]
          :handle-ok  (fn [_] (generate-string (database/get-project (Integer/parseInt id)))))
 
+(defresource image-credentials
+  :allowed-methods [:get]
+  :available-media-types ["application/json"]
+  :handle-ok (fn [_] (generate-string {:bucket (System/getenv "BUCKET")
+                                       :access_key (System/getenv "ACCESS_KEY")
+                                       :secret_key (System/getenv "SECRET_KEY")})))
+
 (defroutes project-routes
   (GET "/projects" request get-all-projects)
   (POST "/projects" request add-new-project)
   (DELETE "/projects/:id" [id] (delete-project id))
-  (GET "/projects/:id" [id] (get-project id)))
+  (GET "/projects/:id" [id] (get-project id))
+  (GET "/image-credentials" request image-credentials))

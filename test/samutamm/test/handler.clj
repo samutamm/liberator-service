@@ -25,6 +25,9 @@
   (app (create-request project)))
 
 ;;tests
+  (fact "image-credentials"
+        (let [res (execute-request :get "/image-credentials")]
+          (:status res) => 200))
 
 (with-state-changes [(before :facts (init))]
   (fact "main route"

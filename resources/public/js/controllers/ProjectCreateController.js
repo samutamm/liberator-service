@@ -60,8 +60,8 @@ angular.module('samutammApp').controller('ProjectCreateController', function (Pr
 
     $scope.creds = {
       bucket: 'samutamm-images',
-      access_key: 'AKIAJWPUEFZKMWZVTTEQ',
-      secret_key: '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'
+      access_key: '',
+      secret_key: ''
     }
 
     $scope.upload = function() {

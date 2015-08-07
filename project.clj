@@ -41,13 +41,6 @@
           :db-url "//localhost/projects"
           :db-user "admin"
           :db-pass "admin"}}
-   :test
-   {:dependencies [[ring-mock "0.1.5"]
-                   [ring/ring-devel "1.2.0"]
-                   [midje "1.6.3"]]
-    :env {:port 3000
-          :db-url "//localhost/testprojects"
-          :db-user "postgres"}}
    :travis-test
    {:dependencies [[ring-mock "0.1.5"]
                    [ring/ring-devel "1.2.0"]
