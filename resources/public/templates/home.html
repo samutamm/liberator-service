@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col-md-4 portfolio-item" ng-repeat="project in projects">
         <a href="#/projects/{{project.id}}">
-            <img class="img-responsive" src="{{imageUrl + project.image}}" alt="{{project.image}}">
+            <img class="img-responsive" ng-src="{{imageUrl(project)}}" alt="{{project.image}}">
         </a>
         <h3>
             <a href="#/projects/{{project.id}}">{{project.projectname}}</a>

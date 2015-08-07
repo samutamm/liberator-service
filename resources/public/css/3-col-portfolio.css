@@ -20,17 +20,19 @@ footer {
     border-color: red
 }
 
-.small-image {
-  position: relative;
-  top: 12px;
-  /* float: left; */
+.logo {
+  float:left;
   width: 45px;
   height: 45px;
 }
 
-.prooject-name {
-  text-align: right;
-  clear: both;
-  float:left;
-  margin-right:15px;
+.small-image {
+  width: 45px;
+  height: 45px;
+}
+
+.project-name {
+  position: relative;
+  bottom: 18px;
+  left: 10px;
 }
