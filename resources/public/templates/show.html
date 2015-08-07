@@ -1,15 +1,24 @@
 <!-- Page Header -->
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">{{project.projectname}}</h1>
+<div class="row page-header">
+    <div class="col-lg-3">
+        <h1 class="project-name" >{{project.projectname}}</h1>
+    </div>
+    <div class="col-lg-9">
+      <a ng-href="">
+        <img class="small-image"
+        src="https://s3.eu-central-1.amazonaws.com/samutamm-images/small-octocat.jpg"
+        alt="GitHub">
+      </a>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-4 portfolio-item">
-        <a href="#">
+        <a href="{{imageUrl}}">
             <img class="img-responsive" src="{{imageUrl}}" alt="">
         </a>
-        <p>{{project.description}}</p>
+
     </div>
+    <h3>Description</h3>
+    <p>{{project.description}}</p>
 </div>
