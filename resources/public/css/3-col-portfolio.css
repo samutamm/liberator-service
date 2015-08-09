@@ -21,7 +21,6 @@ footer {
 }
 
 .logo {
-  float:left;
   width: 45px;
   height: 45px;
 }
@@ -31,8 +30,6 @@ footer {
   height: 45px;
 }
 
-.project-name {
-  position: relative;
-  bottom: 18px;
-  left: 10px;
+.taglist li {
+  display: inline;
 }
