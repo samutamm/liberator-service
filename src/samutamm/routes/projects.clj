@@ -6,12 +6,19 @@
       [cheshire.core :refer [generate-string]]
       [samutamm.models.db :as database]
       [clojure.data.json :as json]
-      [liberator.representation :refer [ring-response]]))
+      [liberator.representation :refer [ring-response]]
+      [clojure.string :as str]))
 
 
 (defn parse-project [context] (json/read-str
                                (slurp (get-in context [:request :body]))
                                :key-fn keyword))
+
+(defn add-tag-to-db [new-tags]
+  (let [existing-tags (map (fn[t] (:tag t)) (database/get-all-tags))]
+    (do
+      (println (str/split new-tags #";"))
+      existing-tags)))
 
 (defn add-project-to-database [project]
   (try

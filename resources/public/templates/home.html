@@ -5,6 +5,11 @@
     </div>
 </div>
 
+<p>
+    <tags-input placeholder="Search by:" 
+                ng-model="searchtags"></tags-input>
+</p>
+
 <div class="row">
     <div class="col-md-4 portfolio-item" ng-repeat="project in projects">
         <a href="#/projects/{{project.id}}">

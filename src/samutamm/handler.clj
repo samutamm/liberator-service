@@ -8,6 +8,7 @@
             [compojure.route :as route]
             [samutamm.routes.home :refer [home-routes]]
             [samutamm.routes.projects :refer [project-routes]]
+            [samutamm.routes.tags :refer [tag-routes]]
             [samutamm.models.db :as database]
             [environ.core :refer [env]]
             [liberator.dev :refer [wrap-trace]]
@@ -23,7 +24,7 @@
   (route/not-found "Not Found"))
 
 (def app
-  (-> (routes home-routes project-routes app-routes)
+  (-> (routes home-routes project-routes tag-routes app-routes)
       (handler/site)
       (wrap-base-url)))
 

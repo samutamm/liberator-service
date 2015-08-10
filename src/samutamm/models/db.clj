@@ -39,6 +39,13 @@
        [:links "varchar(400)"]
        [:created "timestamp"]))))
 
+(defn create-tag-table []
+  (sql/with-connection db
+    (sql/create-table
+     :tags
+     [:id "SERIAL PRIMARY KEY"]
+     [:tag "varchar(50)"])))
+
 (defn get-project [id]
   (sql/with-connection db
     (sql/with-query-results
@@ -49,6 +56,23 @@
     (sql/with-query-results res
       ["select * from projects ORDER BY created DESC"]
       (doall res))))
+
+(defn get-all-tags []
+  (sql/with-connection db
+    (sql/with-query-results res
+      ["select * from tags"]
+      (doall res))))
+
+(defn delete-all-tags []
+  (sql/with-connection db
+    (sql/delete-rows :tags ["id!=?" 0])))
+
+(defn add-tag [tag]
+  (sql/with-connection db
+    (sql/update-or-insert-values
+      :tags
+      ["id=?" 0]
+      {:tag tag})))
 
 (defn update-or-create-project [project]
   "Updates the project defined by id. If no project found with that id, new project will
