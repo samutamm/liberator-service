@@ -14,11 +14,16 @@
                                (slurp (get-in context [:request :body]))
                                :key-fn keyword))
 
-(defn add-tag-to-db [new-tags]
-  (let [existing-tags (map (fn[t] (:tag t)) (database/get-all-tags))]
-    (do
-      (println (str/split new-tags #";"))
-      existing-tags)))
+(defn add-tag-to-db [all-tags]
+  (let [existing-tags (map (fn[t] (:tag t)) (database/get-all-tags))
+        tags (str/split all-tags #";")
+        new-tags (filter (fn[tag] (nil? (some #{tag} existing-tags))) tags)]
+    (loop [to-add new-tags]
+      (if (empty? to-add)
+        (count new-tags)
+        (do
+          (database/add-tag (first to-add))
+          (recur (rest to-add)))))))
 
 (defn add-project-to-database [project]
   (try
