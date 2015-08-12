@@ -4,16 +4,19 @@
         <h1 class="page-header">Projects</h1>
     </div>
 </div>
-{{allTags}}
 <p>
-    <tags-input placeholder="Search by:" ng-model="searchtags" add-on-paste="true"
-                key-property="id" display-property"text">
+    <tags-input placeholder="Search by:"
+                ng-model="tagObjects"
+                on-tag-added="tagAdded($tag)"
+                add-on-paste="true"
+                key-property="id"
+                display-property"text">
       <auto-complete source="allTags"></auto-complete>
     </tags-input>
 </p>
 
 <div class="row">
-    <div class="col-md-4 portfolio-item" ng-repeat="project in projects">
+    <div class="col-md-4 portfolio-item" ng-repeat="project in projects | filter:search">
         <a href="#/projects/{{project.id}}">
             <img class="img-responsive" ng-src="{{imageUrl(project)}}" alt="{{project.image}}">
         </a>
