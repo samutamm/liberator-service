@@ -15,7 +15,7 @@
                                :key-fn keyword))
 
 (defn add-tag-to-db [all-tags]
-  (let [existing-tags (map (fn[t] (:tag t)) (database/get-all-tags))
+  (let [existing-tags (map (fn[t] (:text t)) (database/get-all-tags))
         tags (str/split all-tags #";")
         new-tags (filter (fn[tag] (nil? (some #{tag} existing-tags))) tags)]
     (loop [to-add new-tags]
@@ -27,7 +27,9 @@
 
 (defn add-project-to-database [project]
   (try
-    (database/update-or-create-project project)
+    (do
+      (database/update-or-create-project project)
+      (add-tag-to-db (:tags project)))
     (catch Exception e (println (.getNextException e)))))
 
 

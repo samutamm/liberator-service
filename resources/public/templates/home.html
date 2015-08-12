@@ -4,10 +4,12 @@
         <h1 class="page-header">Projects</h1>
     </div>
 </div>
-
+{{allTags}}
 <p>
-    <tags-input placeholder="Search by:" 
-                ng-model="searchtags"></tags-input>
+    <tags-input placeholder="Search by:" ng-model="searchtags" add-on-paste="true"
+                key-property="id" display-property"text">
+      <auto-complete source="allTags"></auto-complete>
+    </tags-input>
 </p>
 
 <div class="row">

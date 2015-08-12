@@ -44,7 +44,7 @@
     (sql/create-table
      :tags
      [:id "SERIAL PRIMARY KEY"]
-     [:tag "varchar(50)"])))
+     [:text "varchar(50)"])))
 
 (defn get-project [id]
   (sql/with-connection db
@@ -72,7 +72,7 @@
     (sql/update-or-insert-values
       :tags
       ["id=?" 0]
-      {:tag tag})))
+      {:text tag})))
 
 (defn update-or-create-project [project]
   "Updates the project defined by id. If no project found with that id, new project will
@@ -96,9 +96,12 @@
           :created timestamp})
         (catch Exception e (.printStackTrace (.getNextException e)))))))
 
-(defn delete-all-projects []
+(defn delete-all [table]
   (sql/with-connection db
-    (sql/delete-rows :projects ["id!=?" 0])))
+    (sql/delete-rows table ["id!=?" 0])))
+
+(defn delete-all-projects []
+ (delete-all :projects))
 
 (defn delete-project [id]
   (sql/with-connection db
@@ -121,8 +124,11 @@
         (update-or-create-project exampleproject)))
     (catch Exception e (.printStackTrace (.getNextException e)))))
 
-(defn drop-projects-table []
+(defn drop-table [table]
   (sql/with-connection db
     (try
-      (sql/drop-table :projects)
+      (sql/drop-table table)
       (catch Exception _))))
+
+(defn drop-projects-table []
+  (drop-table :projects))

@@ -22,7 +22,6 @@ angular.module('samutammApp').controller('ProjectCreateController', function (AW
     $scope.addProject = function() {
       $scope.isSubmitting = true;
       var project = createProjectObject($scope.project);
-
       $scope.upload();
       project.$save().then(function(response) {
         console.log("Uusi id: " + response.id);
@@ -46,7 +45,9 @@ angular.module('samutammApp').controller('ProjectCreateController', function (AW
       }).join(";");
       projectToSend.projectname = project.projectname;
       projectToSend.description = project.description;
-      projectToSend.image = $scope.file.name;
+      if ($scope.file) {
+        projectToSend.image = $scope.file.name;
+      }
       return projectToSend;
     }
 
