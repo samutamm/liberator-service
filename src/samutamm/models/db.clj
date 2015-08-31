@@ -46,6 +46,14 @@
      [:id "SERIAL PRIMARY KEY"]
      [:text "varchar(50)"])))
 
+(defn create-user-table []
+  (sql/with-connection db
+    (sql/create-table
+     :users
+     [:id "SERIAL PRIMARY KEY"]
+     [:username "varchar(50)"]
+     [:password "varchar(50)"])))
+
 (defn get-project [id]
   (sql/with-connection db
     (sql/with-query-results
@@ -73,6 +81,20 @@
       :tags
       ["id=?" 0]
       {:text tag})))
+
+(defn add-user [username password]
+  (sql/with-connection db
+    (sql/update-or-insert-values
+      :users
+      ["id=?" 0]
+      {:username username
+       :password password})))
+
+(defn get-user [username]
+  (sql/with-connection db
+    (sql/with-query-results res
+      ["select * from users where username = ?" username]
+      (first res))))
 
 (defn update-or-create-project [project]
   "Updates the project defined by id. If no project found with that id, new project will
@@ -119,9 +141,7 @@
 (defn migrate-db []
   (try
     (if (not (projects-table-is-created?))
-      (create-projects-table)
-      (do (delete-all-projects)
-        (update-or-create-project exampleproject)))
+      (create-projects-table))
     (catch Exception e (.printStackTrace (.getNextException e)))))
 
 (defn drop-table [table]

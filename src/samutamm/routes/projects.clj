@@ -28,8 +28,8 @@
 (defn add-project-to-database [project]
   (try
     (do
-      (database/update-or-create-project project)
-      (add-tag-to-db (:tags project)))
+      (add-tag-to-db (:tags project))
+      (database/update-or-create-project project))
     (catch Exception e (println (.getNextException e)))))
 
 
@@ -37,6 +37,11 @@
   (let [fields [:projectname :description :tags :projectstart :projectend]]
     (every? true? (map (fn [field] (not (nil? (field project)))) fields))))
 
+(defn auth-ok? [username password]
+  (and
+   (not (or (nil? username)(nil? password)))
+   (= (database/get-user username)
+      password)))
 
 (defresource get-all-projects
         :allowed-methods [:get]
@@ -50,6 +55,8 @@
                                     updated-ctx (assoc ctx ::project project)
                                     result (conj [] (not (project-is-valid project)) updated-ctx)]
                                   result))
+         :authorized? (fn [ctx] (let [project (::project ctx)]
+                                  (auth-ok? (:username project)(:password))))
          :handle-malformed (fn [_] (generate-string (str "Malformed json!")))
          :post! (fn [ctx]  { ::data (generate-string (add-project-to-database  (::project ctx))) })
          :handle-created ::data)
@@ -72,9 +79,18 @@
                                        :access_key (System/getenv "ACCESS_KEY")
                                        :secret_key (System/getenv "SECRET_KEY")})))
 
+(defresource authenticate [cred]
+  :allowed-methods [:get]
+  :available-media-types ["application/json"]
+  :authorized? (fn[_] (let [username (first (str/split cred #"&"))
+                          password (second (str/split cred #"&"))]
+                        (auth-ok? username password)))
+  :handle-ok (fn[_] "OK"))
+
 (defroutes project-routes
   (GET "/projects" request get-all-projects)
   (POST "/projects" request add-new-project)
   (DELETE "/projects/:id" [id] (delete-project id))
   (GET "/projects/:id" [id] (get-project id))
-  (GET "/image-credentials" request image-credentials))
+  (GET "/image-credentials" request image-credentials)
+  (GET "/authenticate/:credentials" [credentials] (authenticate credentials)))
