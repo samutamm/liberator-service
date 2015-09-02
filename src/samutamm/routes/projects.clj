@@ -40,8 +40,10 @@
 (defn auth-ok? [username password]
   (and
    (not (or (nil? username)(nil? password)))
-   (= (database/get-user username)
-      password)))
+   (do
+     (println (database/get-user username))
+     (= (:password (database/get-user username))
+        password))))
 
 (defresource get-all-projects
         :allowed-methods [:get]
@@ -82,9 +84,9 @@
 (defresource authenticate [cred]
   :allowed-methods [:get]
   :available-media-types ["application/json"]
-  :authorized? (fn[_] (let [username (first (str/split cred #"&"))
-                          password (second (str/split cred #"&"))]
-                        (auth-ok? username password)))
+  :authorized? (fn[_] (let [username (first (str/split cred #"-"))
+                          password (second (str/split cred #"-"))]
+                          (auth-ok? username password)))
   :handle-ok (fn[_] "OK"))
 
 (defroutes project-routes

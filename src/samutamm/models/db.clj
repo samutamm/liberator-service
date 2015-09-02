@@ -71,6 +71,12 @@
       ["select * from tags"]
       (doall res))))
 
+(defn get-all-users []
+  (sql/with-connection db
+    (sql/with-query-results res
+      ["select * from users"]
+      (doall res))))
+
 (defn delete-all-tags []
   (sql/with-connection db
     (sql/delete-rows :tags ["id!=?" 0])))
