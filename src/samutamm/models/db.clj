@@ -1,7 +1,8 @@
 (ns samutamm.models.db
   (:require [clojure.java.jdbc :as sql]
             [environ.core :refer [env]]
-            [samutamm.helpers :refer :all]))
+            [samutamm.helpers :refer :all]
+            [clojure.data.json :as json]))
 
 (def db-with-password  {:subprotocol "postgresql"
                         :subname (env :db-url)
@@ -118,7 +119,7 @@
           :description (:description project)
           :tags (:tags project)
           :image (:image project)
-          :links (:links project)
+          :links (json/write-str (:links project))
           :projectstart start
           :projectend end
           :created timestamp})

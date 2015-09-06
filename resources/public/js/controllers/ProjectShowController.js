@@ -3,5 +3,6 @@ angular.module('samutammApp').controller('ProjectShowController', function (Proj
       $scope.imageUrl = "https://s3.eu-central-1.amazonaws.com/samutamm-images/" + response.image;
       $scope.project = response;
       $scope.github = JSON.parse(response.links).github;
+      $scope.tags = response.tags.split(";");
     });
 });

@@ -48,6 +48,7 @@ angular.module('samutammApp').controller('ProjectCreateController', function (AW
       if ($scope.file) {
         projectToSend.image = $scope.file.name;
       }
+      projectToSend.links = project.links;
       return projectToSend;
     }
 
@@ -84,13 +85,5 @@ angular.module('samutammApp').controller('ProjectCreateController', function (AW
       }
     }
 
-    function authentication() {
-        var creds = {}
-        creds.username = prompt("Username: ");
-        creds.password = prompt("Password: ");
-        var auth = new Auth(creds);
-    }
-    angular.element(document).ready(function() {
-      authentication();
-    });
+    var auth = new Auth();
 });

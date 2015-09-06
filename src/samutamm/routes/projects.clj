@@ -26,11 +26,12 @@
           (recur (rest to-add)))))))
 
 (defn add-project-to-database [project]
-  (try
-    (do
-      (add-tag-to-db (:tags project))
-      (database/update-or-create-project project))
-    (catch Exception e (println (.getNextException e)))))
+  (do (println project)
+    (try
+      (do
+        (add-tag-to-db (:tags project))
+        (database/update-or-create-project project))
+      (catch Exception e (println (.getNextException e))))))
 
 
 (defn project-is-valid [project]
@@ -57,8 +58,6 @@
                                     updated-ctx (assoc ctx ::project project)
                                     result (conj [] (not (project-is-valid project)) updated-ctx)]
                                   result))
-         :authorized? (fn [ctx] (let [project (::project ctx)]
-                                  (auth-ok? (:username project)(:password))))
          :handle-malformed (fn [_] (generate-string (str "Malformed json!")))
          :post! (fn [ctx]  { ::data (generate-string (add-project-to-database  (::project ctx))) })
          :handle-created ::data)

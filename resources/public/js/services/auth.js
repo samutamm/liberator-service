@@ -1,6 +1,8 @@
 angular.module('samutammApp').factory('Auth', function($http, $location) {
-  return function(credentials) {
-    var authUrl = "/authenticate/" + credentials.username + "-" + credentials.password;
+  return function() {
+    var username = prompt("Username: ");
+    var password = prompt("Password: ");
+    var authUrl = "/authenticate/" + username + "-" + password;
     $http.get(authUrl).
       then(function(response) {
         console.log(response.statusText);

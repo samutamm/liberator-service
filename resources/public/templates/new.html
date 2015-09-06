@@ -34,6 +34,11 @@
               <input name="file" type="file" file />
             </p>
             <p>
+                <label>Github</label>
+                <input name="github" type="text" ng-model="project.links.github" required ng-minlength="3"
+                       ng-class="{invalid : projectForm.links.github.$invalid && projectForm.links.github.$dirty}">
+            </p>
+            <p>
                 <button class="btn btn-default" ng-disabled="projectForm.$invalid"
                         ng-click="addProject()">{{isSubmitting ? 'saving...' : 'Save'}}</button>
             </p>
