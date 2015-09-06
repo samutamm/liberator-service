@@ -87,7 +87,7 @@
   :authorized? (fn[_] (let [username (first (str/split cred #"-"))
                           password (second (str/split cred #"-"))]
                           (auth-ok? username password)))
-  :handle-ok (fn[_] "OK"))
+  :handle-ok (fn[_] (generate-string "OK")))
 
 (defroutes project-routes
   (GET "/projects" request get-all-projects)

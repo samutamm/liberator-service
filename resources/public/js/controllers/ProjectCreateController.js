@@ -1,4 +1,4 @@
-angular.module('samutammApp').controller('ProjectCreateController', function (AWSCredentials, Project, $scope, $location) {
+angular.module('samutammApp').controller('ProjectCreateController', function (AWSCredentials, Project, $scope, $location, Auth) {
     $scope.isSubmitting = false;
 
     $scope.today = function() {
@@ -83,4 +83,14 @@ angular.module('samutammApp').controller('ProjectCreateController', function (AW
         alert('No File Selected');
       }
     }
+
+    function authentication() {
+        var creds = {}
+        creds.username = prompt("Username: ");
+        creds.password = prompt("Password: ");
+        var auth = new Auth(creds);
+    }
+    angular.element(document).ready(function() {
+      authentication();
+    });
 });
